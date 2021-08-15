@@ -27,7 +27,7 @@ public class User {
 	}
 	
 	public void setToken() {
-		token = RandomStringUtils.randomAlphanumeric(20);
+		token = RandomStringUtils.randomAlphanumeric(32);
 	}
 	
 	public String getToken() {

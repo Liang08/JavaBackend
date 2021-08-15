@@ -76,7 +76,7 @@ public class BackendSystem {
 	 * @param searchKey关键字
 	 * @param offset偏移量
 	 * @param limit返回个数
-	 * @return JSONArray格式的数组
+	 * @return JSONObject的List
 	 */
 	public static Object getInstanceList(String course, String searchKey, Integer offset, Integer limit) {
 		if (course == null || course.isEmpty() || searchKey == null || searchKey.isEmpty()) {
@@ -84,6 +84,9 @@ public class BackendSystem {
 		}
 		if (offset == null) offset = 0;
 		if (limit == null) limit = 50;
+		if (offset < 0 || limit < 0) {
+			return new Error(10, "Offset and limit cannot be negative!");
+		}
 		System.out.println("Getting Instance List");
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
@@ -95,10 +98,17 @@ public class BackendSystem {
 		map.put("searchKey", searchKey);
 		map.put("id", id);
 		ResponseEntity<String> response = restTemplate.exchange(url + "/typeOpen/open/instanceList" + format(map), HttpMethod.GET, request, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
+		try {
+			assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		}
+		catch (Exception e) {
+			System.out.println("ERR: getInstanceList in BackendSystem\n" + response);
+			return new Error(-1, "Server Error.");
+		}
+		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
 		System.out.println("Getting Instance List successful!");
-		return ((JSONArray)jsonObject.get("data")).subList(offset, offset + limit);
+		
+		return jsonArray.subList(Math.min(jsonArray.size(), Math.max(0, offset)), Math.min(jsonArray.size(), offset + limit));
 	}
 	
 	/**
@@ -123,7 +133,13 @@ public class BackendSystem {
 		map.put("name", name);
 		map.put("id", id);
 		ResponseEntity<String> response = restTemplate.exchange(url + "/typeOpen/open/infoByInstanceName" + format(map), HttpMethod.GET, request, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		try {
+			assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		}
+		catch (Exception e) {
+			System.out.println("ERR: getInstanceList in BackendSystem\n" + response);
+			return new Error(-1, "Server Error.");
+		}
 		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
 		System.out.println("Getting Info By Instance Name successful!");
 		return jsonObject.get("data");
@@ -151,7 +167,13 @@ public class BackendSystem {
 		map.add("id", id);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		ResponseEntity<String> response = restTemplate.postForEntity(url + "/typeOpen/open/inputQuestion", request, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		try {
+			assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		}
+		catch (Exception e) {
+			System.out.println("ERR: getInstanceList in BackendSystem\n" + response);
+			return new Error(-1, "Server Error.");
+		}
 		System.out.print(response.getBody());
 		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
 		System.out.println("Inputing Question successful!");

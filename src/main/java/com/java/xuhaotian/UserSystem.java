@@ -3,7 +3,8 @@ package com.java.xuhaotian;
 import java.util.HashMap;
 
 public class UserSystem {
-	private static final HashMap<String, User> userMap = new HashMap<String, User>();
+	private static final HashMap<String, User> userMap = new HashMap<>();
+	private static final HashMap<String, User> tokenMap = new HashMap<>();
 	
 	public static Error register(String userName, String password) {
 		Error error = null;
@@ -32,9 +33,15 @@ public class UserSystem {
 				return new Error(5, "Password incorrect. Please try again.");
 			}
 			else {
+				tokenMap.remove(user.getToken(), user);
 				user.setToken();
+				tokenMap.put(user.getToken(), user);
 				return user.getToken();
 			}
 		}
+	}
+	
+	public static User getUserByToken(String token) {
+		return tokenMap.get(token);
 	}
 }
