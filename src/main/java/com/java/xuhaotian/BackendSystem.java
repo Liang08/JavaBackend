@@ -80,7 +80,7 @@ public class BackendSystem {
 	 */
 	public static Object getInstanceList(String course, String searchKey, Integer offset, Integer limit) {
 		if (course == null || course.isEmpty() || searchKey == null || searchKey.isEmpty()) {
-			return new Error(6, "Course and searchkey cannot be empty!");
+			return new Error(6, "Course and searchKey cannot be empty!");
 		}
 		if (offset == null) offset = 0;
 		if (limit == null) limit = 50;
@@ -113,7 +113,7 @@ public class BackendSystem {
 	
 	/**
 	 * 实体详情接口
-	 * @param course学科（可选，无效）
+	 * @param course学科（可选）
 	 * @param name实体名称
 	 * @return JSON格式的实体详情
 	 */
@@ -147,7 +147,7 @@ public class BackendSystem {
 	
 	/**
 	 * 问答接口
-	 * @param course学科（可选，无效）
+	 * @param course学科（可选）
 	 * @param inputQuestion问题
 	 * @return JSON格式的回答
 	 */
@@ -171,12 +171,85 @@ public class BackendSystem {
 			assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		}
 		catch (Exception e) {
-			System.out.println("ERR: getInstanceList in BackendSystem\n" + response);
+			System.out.println("ERR: inputQuestion in BackendSystem\n" + response);
 			return new Error(-1, "Server Error.");
 		}
-		System.out.print(response.getBody());
 		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
 		System.out.println("Inputing Question successful!");
 		return jsonObject.get("data");
 	}
+	
+	/**
+	 * 知识链接接口
+	 * @param context待识别文本
+	 * @param course学科（可选）
+	 * @return JSON格式的标注
+	 */
+	public static Object linkInstance(String context, String course) {
+		if (context == null || context.isEmpty()) {
+			return new Error(11, "Context cannot be empty!");
+		}
+		if (course == null) course = "";
+		System.out.println("Linking Instance");
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+		map.add("context", context);
+		map.add("course", course);
+		map.add("id", id);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		ResponseEntity<String> response = restTemplate.postForEntity(url + "/typeOpen/open/linkInstance", request, String.class);
+		try {
+			assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		}
+		catch (Exception e) {
+			System.out.println("ERR: linkInstance in BackendSystem\n" + response);
+			return new Error(-1, "Server Error.");
+		}
+		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
+		System.out.println("Linking Instance successful!");
+		return jsonObject.get("data");
+	}
+	
+	/**
+	 * 实体相关习题接口
+	 * @param uriName实体名
+	 * @param offset偏移量
+	 * @param limit返回个数
+	 * @return JSONObject的List
+	 */
+	public static Object getQuestionListByUriName(String uriName, Integer offset, Integer limit) {
+		if (uriName == null || uriName.isEmpty()) {
+			return new Error(12, "UriName cannot be empty!");
+		}
+		if (offset == null) offset = 0;
+		if (limit == null) limit = 10;
+		if (offset < 0 || limit < 0) {
+			return new Error(13, "Offset and limit cannot be negative!");
+		}
+		System.out.println("Getting Question List By Uri Name");
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<String> request = new HttpEntity<>(headers);
+		Map<String, String> map= new HashMap<>();
+		map.put("uriName", uriName);
+		map.put("id", id);
+		ResponseEntity<String> response = restTemplate.exchange(url + "/typeOpen/open/questionListByUriName" + format(map), HttpMethod.GET, request, String.class);
+		try {
+			assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		}
+		catch (Exception e) {
+			System.out.println("ERR: getQuestionListByUriName in BackendSystem\n" + response);
+			return new Error(-1, "Server Error.");
+		}
+		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
+		System.out.println("Getting Question List By Uri Name successful!");
+		
+		return jsonArray.subList(Math.min(jsonArray.size(), Math.max(0, offset)), Math.min(jsonArray.size(), offset + limit));
+	}
+	
 }

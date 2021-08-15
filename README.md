@@ -73,3 +73,34 @@ Post
 | token | String | RequestBody | token |
 ### 返回值
 回答:JSONObject
+
+
+### 知识链接接口
+/linkInstance
+### 方法类型
+Post
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| context | String | RequestBody | 待识别文本，非空 |
+| course | String | RequestBody | 学科，可选 |
+| token | String | RequestBody | token |
+### 返回值
+知识标注:JSONObject
+
+
+### 实体相关习题列表接口
+/getQuestionListByUriName
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| uriName | String | Param | 实体名，非空 |
+| offset | Integer | Param | 偏移量，缺省值0 |
+| limit | Integer | Param | 获取个数，缺省值10 |
+| token | String | Param | token |
+### 返回值
+列表:List
+
+
