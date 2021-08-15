@@ -4,10 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 
-
+@RestController
 public class UserController {
 	/**
 	 * 用户注册
@@ -15,7 +16,7 @@ public class UserController {
 	 * @return 如果注册失败返回错误信息，成功(201)返回空
 	 */
 	@PostMapping(value = "/register")
-    public ResponseEntity<?> register(@RequestBody JSONObject param) {
+	public ResponseEntity<?> register(@RequestBody JSONObject param) {
 		String userName = param.getString("userName");
 		String password = param.getString("password");
 		Error error = UserSystem.register(userName, password);
@@ -26,7 +27,7 @@ public class UserController {
 	/**
 	 * 用户登录
 	 * @param param包括userName和password，都是String类型，要求非空
-	 * @return 如果登陆失败返回错误信息，成功(200)则返回Token
+	 * @return 如果登陆失败返回错误信息，成功(200)则返回Token(String类型)
 	 */
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody JSONObject param) {
