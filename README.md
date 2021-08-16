@@ -15,7 +15,7 @@ Post
 | userName | String | RequestBody | 用户名，非空 |
 | password | String | RequestBody | 密码，非空 |
 ### 返回值
-null
+token:String
 
 
 ### 注册接口
@@ -28,7 +28,7 @@ Post
 | userName | String | RequestBody | 用户名，非空 |
 | password | String | RequestBody | 密码，非空 |
 ### 返回值
-token:String
+null
 
 
 ### 实体列表接口
