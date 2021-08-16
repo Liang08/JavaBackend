@@ -5,6 +5,7 @@
 默认为localhost:8080
 
 # 接口
+
 ### 登录接口
 /login
 ### 方法类型
@@ -104,3 +105,51 @@ Get
 列表:List
 
 
+### 实体访问历史记录接口
+/getInstanceHistory
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| token | String | Param | token |
+### 返回值
+String[]
+
+
+### 收藏列表接口
+/getFavourite
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| token | String | Param | token |
+### 返回值
+String[]
+
+
+### 设置收藏接口
+/setFavourite
+### 方法类型
+PUT
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| name | String | RequestBody | 实体名 |
+| token | String | RequestBody | token |
+### 返回值
+null
+
+
+### 取消收藏接口
+/resetFavourite
+### 方法类型
+PUT
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| name | String | RequestBody | 实体名 |
+| token | String | RequestBody | token |
+### 返回值
+null
