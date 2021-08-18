@@ -6,6 +6,19 @@
 
 # 接口
 
+### 注册接口
+/register
+### 方法类型
+Post
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| userName | String | RequestBody | 用户名，非空 |
+| password | String | RequestBody | 密码，非空 |
+### 返回值
+null
+
+
 ### 登录接口
 /login
 ### 方法类型
@@ -19,15 +32,28 @@ Post
 token:String
 
 
-### 注册接口
-/register
+### 登出接口
+/logout
 ### 方法类型
-Post
+Put
 ### 参数
 | 名称 | 类型 | 位置 | 描述 |
 | ---- | ---- | ---- | ---- |
-| userName | String | RequestBody | 用户名，非空 |
-| password | String | RequestBody | 密码，非空 |
+| token | String | RequestBody | token |
+### 返回值
+null
+
+
+### 修改密码接口
+/modifyPassword
+### 方法类型
+Put
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| oldPassword | String | RequestBody | 原密码，非空 |
+| newPassword | String | RequestBody | 新密码，非空 |
+| token | String | RequestBody | token |
 ### 返回值
 null
 

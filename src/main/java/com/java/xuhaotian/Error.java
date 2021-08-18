@@ -3,20 +3,20 @@ package com.java.xuhaotian;
 /**
  * 请求错误类型，包括错误代码以及错误信息
  * -1:Server Error
- * 1:userName or password empty when registion
- * 2:userName already exist when registion
+ * 1:userName or password empty when registration
+ * 2:userName already exist when registration
  * 3:userName or password empty when login
  * 4:userName not exist when login
- * 5:password incorrect when login
+ * 5:password incorrect
  * 6:course or searchKey empty when getInstanceList
  * 7:name empty when getInfoByInstanceName
  * 8:inputQuestion empty when inputQuestion
- * 9:not logged in when query
+ * 9:not logged in
  * 10:offset or limit negative when getInstanceList
  * 11:context empty when linkInstance
  * 12:uriName empty when getQuestionListByUriName
  * 13:offset or limit negative when getQuestionListByUriName
- * 
+ * 14:password empty when modifying password
  * @author xht13127
  * 
  */

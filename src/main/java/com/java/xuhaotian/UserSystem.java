@@ -41,6 +41,30 @@ public class UserSystem {
 		}
 	}
 	
+	public static Error logout(User user) {
+		if (user == null) {
+			return new Error(9, "Require logged in.");
+		}
+		tokenMap.remove(user.getToken(), user);
+		return null;
+	}
+	
+	public static Error modifyPassword(User user, String oldPassword, String newPassword) {
+		if (user == null) {
+			return new Error(9, "Require logged in.");
+		}
+		else if (!user.getPassword().equals(oldPassword)) {
+			return new Error(5, "Password incorrect. Please try again.");
+		}
+		else if (newPassword == null || newPassword.isEmpty()) {
+			return new Error(14, "Password cannot be empty!");
+		}
+		else {
+			user.modifyPassword(newPassword);
+		}
+		return null;
+	}
+	
 	public static User getUserByToken(String token) {
 		return tokenMap.get(token);
 	}

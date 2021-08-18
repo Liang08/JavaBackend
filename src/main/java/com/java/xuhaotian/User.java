@@ -12,7 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  */
 public class User {
 	private final String userName;
-	private final String password;
+	private String password;
 	private String token;
 	History instanceHistory;
 	Set<String> favourite;
@@ -31,6 +31,10 @@ public class User {
 	
 	public String getPassword() {
 		return password;
+	}
+	
+	public void modifyPassword(String password) {
+		this.password = password;
 	}
 	
 	public void setToken() {
