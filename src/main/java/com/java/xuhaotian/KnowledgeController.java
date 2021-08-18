@@ -2,6 +2,7 @@ package com.java.xuhaotian;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +37,10 @@ public class KnowledgeController {
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
 		Object obj = BackendSystem.getInstanceList(course, searchKey, offset, limit);
 		if (obj instanceof Error) return new ResponseEntity<Error>((Error)obj, HttpStatus.NOT_ACCEPTABLE);
-		else if (obj instanceof List) return new ResponseEntity<>(obj, HttpStatus.OK);
+		else if (obj instanceof List) {
+			user.addSearchHistory(ImmutablePair.of(course, searchKey));
+			return new ResponseEntity<>(obj, HttpStatus.OK);
+		}
 		else {
 			System.out.println("ERR: getInstanceList in KnowledgeController\n" + obj.getClass());
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -195,5 +199,25 @@ public class KnowledgeController {
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
 		user.resetFavourite(name);
 		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+	
+	/**
+	 * 获取搜索历史记录
+	 * @param token
+	 * @return 如果失败返回错误信息，成功（200）返回学科-关键字键值对数组(String[]类型)
+	 */
+	@GetMapping(value = "/getSearchHistory")
+	public ResponseEntity<?> getSearchHistory(@RequestParam(value="token") String token) {
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		ImmutablePair<String, String>[]history;
+		try {
+			history = user.getSearchHistory();
+		}
+		catch (Throwable e) {
+			System.out.println("ERR: getSearchHistory in KnowledgeController\n" + e);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(history, HttpStatus.OK);
 	}
 }

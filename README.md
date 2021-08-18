@@ -179,3 +179,15 @@ PUT
 | token | String | RequestBody | token |
 ### 返回值
 null
+
+
+### 搜索历史记录接口
+/getSearchHistory
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| token | String | Param | token |
+### 返回值
+ImmutablePair<String, String>[]

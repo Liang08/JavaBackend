@@ -1,32 +1,37 @@
 package com.java.xuhaotian;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class History {
-	private final String[] history;
+public class History<T> {
+	private T[] history;
 	private final int size;
 	private int pos;
+	private Class<T> componentType;
 	
-	History(int size) {
-		history = new String[size];
+	@SuppressWarnings("unchecked")
+	History(Class<T> componentType, int size) {
+		this.componentType = componentType;
+		history = (T[]) Array.newInstance(componentType, size);
 		this.size = size;
 		pos = 0;
 	}
 	
-	void addHistory(String newHistory) {
+	void addHistory(T newHistory) {
 		history[pos++] = newHistory;
 		if (pos == size) pos = 0;
 	}
 	
-	String[] getHistory() throws Throwable {
+	@SuppressWarnings("unchecked")
+	T[] getHistory() {
 		System.out.println("getHistory");
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<T> res = new ArrayList<T>();
 		for (int i = 1; i <= size; i++) {
-			String tmp = history[(pos - i + size) % size];
+			T tmp = history[(pos - i + size) % size];
 			if (tmp == null) break;
 			res.add(tmp);
 		}
 		System.out.println("getHistory successful" + res);
-		return res.toArray(new String[0]);
+		return res.toArray((T[]) Array.newInstance(componentType, 0));
 	}
 }
