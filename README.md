@@ -143,6 +143,18 @@ Get
 String[]
 
 
+### 清除实体访问历史记录接口
+/clearInstanceHistory
+### 方法类型
+Put
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| token | String | RequestBody | token |
+### 返回值
+null
+
+
 ### 收藏列表接口
 /getFavourite
 ### 方法类型
@@ -191,3 +203,15 @@ Get
 | token | String | Param | token |
 ### 返回值
 ImmutablePair<String, String>[]
+
+
+### 清除搜索历史记录接口
+/clearSearchHistory
+### 方法类型
+Put
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| token | String | RequestBody | token |
+### 返回值
+null

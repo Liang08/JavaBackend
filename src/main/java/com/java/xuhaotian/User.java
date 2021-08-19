@@ -25,10 +25,10 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.token = "";
-		instanceHistory = new History<String>(String.class, 50);
+		instanceHistory = new History<String>(String.class, 30);
 		favourite = new HashSet<String>();
 		searchHistory = new History<ImmutablePair<String, String>>(
-				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 50);
+				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 30);
 	}
 	
 	public String getUserName() {
@@ -55,6 +55,10 @@ public class User {
 		instanceHistory.addHistory(instance);
 	}
 	
+	public void clearInstanceHistory() {
+		instanceHistory.clear();
+	}
+	
 	public String[] getInstanceHistory() {
 		return instanceHistory.getHistory();
 	}
@@ -77,5 +81,9 @@ public class User {
 	
 	public ImmutablePair<String, String>[] getSearchHistory() {
 		return searchHistory.getHistory();
+	}
+	
+	public void clearSearchHistory() {
+		searchHistory.clear();
 	}
 }

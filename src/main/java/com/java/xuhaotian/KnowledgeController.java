@@ -159,6 +159,20 @@ public class KnowledgeController {
 	}
 	
 	/**
+	 * 清除实体访问历史记录
+	 * @param token
+	 * @return 成功（200）返回null
+	 */
+	@PutMapping(value = "/clearInstanceHistory")
+	public ResponseEntity<?> clearInstanceHistory(@RequestBody JSONObject param) {
+		String token = param.getString("token");
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		user.clearInstanceHistory();
+		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+	
+	/**
 	 * 获取收藏实体列表
 	 * @param token
 	 * @return 成功（200）返回实体名数组(String[]类型)
@@ -219,5 +233,19 @@ public class KnowledgeController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(history, HttpStatus.OK);
+	}
+	
+	/**
+	 * 清除搜索历史记录
+	 * @param token
+	 * @return 成功（200）返回null
+	 */
+	@PutMapping(value = "/clearSearchHistory")
+	public ResponseEntity<?> clearSearchHistory(@RequestBody JSONObject param) {
+		String token = param.getString("token");
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		user.clearSearchHistory();
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 }

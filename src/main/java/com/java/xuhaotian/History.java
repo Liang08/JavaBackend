@@ -34,4 +34,10 @@ public class History<T> {
 		System.out.println("getHistory successful" + res);
 		return res.toArray((T[]) Array.newInstance(componentType, 0));
 	}
+
+	public void clear() {
+		for (int i = 0; i < size; i++)
+			history[i] = null;
+		pos = 0;
+	}
 }
