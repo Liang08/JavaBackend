@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.*;
 
+import com.alibaba.fastjson.JSONObject;
 import com.opencsv.CSVReader;
 
 public class DataSystem {
@@ -27,6 +28,8 @@ public class DataSystem {
 	private static final Map<String, Map<String, Integer>> labelCount = new HashMap<>();
 	private static Map<String, String> mathClassLabel;
 	private static final Map<String, Map<String, String>> classLabel = new HashMap<>();
+	
+	private static final Map<Integer, JSONObject> questions = new HashMap<>();
 	
 	private static void load(String subject) {
 		System.out.println("Loading " + subject + "...");
@@ -130,5 +133,13 @@ public class DataSystem {
 			res.add(list.get(i).getKey());
 		}
 		return res;
+	}
+
+	public static void addQuestion(JSONObject obj) {
+		questions.put(obj.getIntValue("id"), obj);
+	}
+
+	public static JSONObject getQuestion(int id) {
+		return questions.get(id);
 	}
 }

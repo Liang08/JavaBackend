@@ -192,7 +192,39 @@ Get
 | limit | Integer | Param | 获取个数，缺省值10 |
 | token | String | Param | token |
 ### 返回值
-列表:List
+习题列表:List
+### 返回样例
+```json
+[
+    {
+        "qAnswer": "C",
+        "A": "黑色人种-非洲北部",
+        "B": "白色人种-非洲中部",
+        "C": "黄色人种-亚洲东部",
+        "D": "混血人种-欧洲",
+        "id": 183924,
+        "qBody": "下列人种与其主要分布地区的组合,正确的是()"
+    },
+    {
+        "qAnswer": "B",
+        "A": "大洋洲、北冰洋",
+        "B": "亚洲、太平洋",
+        "C": "非洲、大西洋",
+        "D": "北美洲、印度洋",
+        "id": 183767,
+        "qBody": "面积最大的大洲和面积最大的大洋分别是:()"
+    },
+    {
+        "qAnswer": "A",
+        "A": "环太平洋地带",
+        "B": "亚洲内部",
+        "C": "北冰洋沿岸",
+        "D": "非洲",
+        "id": 183710,
+        "qBody": "世界上火山、地震最频繁的地区分布在()"
+    }
+]
+```
 
 
 ### 实体访问历史记录接口
@@ -208,7 +240,8 @@ String[]
 ### 返回样例
 ```json
 [
-    "李白"
+    "李白",
+	"杜甫"
 ]
 ```
 
@@ -234,7 +267,7 @@ Get
 | ---- | ---- | ---- | ---- |
 | token | String | Param | token |
 ### 返回值
-String[]
+收藏列表:String[]
 ### 返回样例
 ```json
 [
@@ -278,7 +311,7 @@ Get
 | ---- | ---- | ---- | ---- |
 | token | String | Param | token |
 ### 返回值
-ImmutablePair<String, String>[]
+搜索历史记录:ImmutablePair<String, String>[]
 ### 返回样例
 ```json
 [
@@ -317,7 +350,7 @@ Get
 | subject | String | Param | 学科 |
 | token | String | Param | token |
 ### 返回值
-String[]
+热门标签:String[]
 ### 返回样例
 ```json
 [

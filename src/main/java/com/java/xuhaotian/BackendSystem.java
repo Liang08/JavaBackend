@@ -346,9 +346,34 @@ public class BackendSystem {
 			return new Error(-1, "Server Error.");
 		}
 		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
-		System.out.println("Getting Question List By Uri Name successful!");
+		if (jsonArray == null) jsonArray = new JSONArray();
+		System.out.println("Dealing data...");
 		
-		return jsonArray.subList(Math.min(jsonArray.size(), Math.max(0, offset)), Math.min(jsonArray.size(), offset + limit));
+		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
+		
+		ArrayList<JSONObject> list = new ArrayList<>();
+		final String pattern0 = "^(?:答案)([ABCD])$";
+		final Pattern r0 = Pattern.compile(pattern0);
+		final String pattern1 = "(.+)A\\.(.+)B\\.(.+)C\\.(.+)D\\.(.+)";
+		final Pattern r1 = Pattern.compile(pattern1);
+		for (JSONObject obj : originalList) {
+			JSONObject newObj = new JSONObject();
+			Matcher m0 = r0.matcher(obj.getString("qAnswer"));
+			Matcher m1 = r1.matcher(obj.getString("qBody"));
+			if (m0.find() && m1.find()) {
+				newObj.put("id", obj.getIntValue("id"));
+				newObj.put("qAnswer", m0.group(1));
+				newObj.put("qBody", m1.group(1));
+				newObj.put("A", m1.group(2));
+				newObj.put("B", m1.group(3));
+				newObj.put("C", m1.group(4));
+				newObj.put("D", m1.group(5));
+				list.add(newObj);
+			}
+		}
+		
+		System.out.println("Getting Question List By Uri Name successful!");
+		return list.subList(Math.min(list.size(), Math.max(0, offset)), Math.min(list.size(), offset + limit));
 	}
 	
 }
