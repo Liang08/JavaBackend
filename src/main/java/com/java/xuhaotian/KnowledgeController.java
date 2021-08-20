@@ -1,16 +1,12 @@
 package com.java.xuhaotian;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -24,6 +20,8 @@ public class KnowledgeController {
 	 * @param searchKey关键字，String
 	 * @param offset偏移量，Integer，可选，缺省值0
 	 * @param limit数量，Integer，可选，缺省值50
+	 * @param label筛选标签，String，可选，默认不筛选
+	 * @param sorted是否按照相关度排序，Boolean，可选，默认不排序
 	 * @param token
 	 * @return 如果失败返回错误信息，成功（200）返回实体列表（List类型）
 	 */
@@ -32,10 +30,12 @@ public class KnowledgeController {
 			@RequestParam(value="searchKey") String searchKey, 
 			@RequestParam(value="offset",required=false,defaultValue="0") Integer offset, 
 			@RequestParam(value="limit",required=false,defaultValue="50") Integer limit, 
+			@RequestParam(value="label",required=false,defaultValue="") String label, 
+			@RequestParam(value="sorted",required=false,defaultValue="false") Boolean sorted, 
 			@RequestParam(value="token") String token) {
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		Object obj = BackendSystem.getInstanceList(course, searchKey, offset, limit);
+		Object obj = BackendSystem.getInstanceList(course, searchKey, offset, limit, label, sorted);
 		if (obj instanceof Error) return new ResponseEntity<Error>((Error)obj, HttpStatus.NOT_ACCEPTABLE);
 		else if (obj instanceof List) {
 			user.addSearchHistory(ImmutablePair.of(course, searchKey));
@@ -247,5 +247,20 @@ public class KnowledgeController {
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
 		user.clearSearchHistory();
 		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+	
+	/**
+	 * 获取热门标签列表
+	 * @param subject学科
+	 * @param token
+	 * @return 成功（200）返回热门标签数组(String[]类型)
+	 */
+	@GetMapping(value = "/getHotLabel")
+	public ResponseEntity<?> getHotLabel(@RequestParam(value="subject") String subject,
+			@RequestParam(value="token") String token) {
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		ArrayList<String> hotLabel = DataSystem.getHotLabel(subject);
+		return new ResponseEntity<>(hotLabel, HttpStatus.OK);
 	}
 }

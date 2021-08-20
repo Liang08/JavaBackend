@@ -4,8 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -71,6 +72,27 @@ public class BackendSystem {
 	}
 	
 	/**
+	 * 求名字与关键字的相关度
+	 * @param name名字
+	 * @param key关键字
+	 * @return 相关度
+	 */
+	private static int getRelevancy(String name, String key) {
+		int relevancy = 20;
+		int pos = 0, next = 0;
+		while ((next = name.indexOf(key, pos)) != -1) {
+			pos = next + key.length();
+			relevancy += 8;
+		}
+		relevancy -= 3 * (name.length() - relevancy / 10 * key.length());
+		final String pattern = "[,.;/\s，。；、与和]";
+		final Pattern r = Pattern.compile(pattern);
+		Matcher m = r.matcher(name);
+		while (m.find()) relevancy -= 20;
+		return relevancy;
+	}
+	
+	/**
 	 * 实体搜索接口
 	 * @param course学科
 	 * @param searchKey关键字
@@ -78,7 +100,7 @@ public class BackendSystem {
 	 * @param limit返回个数
 	 * @return JSONObject的List
 	 */
-	public static Object getInstanceList(String course, String searchKey, Integer offset, Integer limit) {
+	public static Object getInstanceList(String course, String searchKey, Integer offset, Integer limit, String label, Boolean sorted) {
 		if (course == null || course.isEmpty() || searchKey == null || searchKey.isEmpty()) {
 			return new Error(6, "Course and searchKey cannot be empty!");
 		}
@@ -87,6 +109,8 @@ public class BackendSystem {
 		if (offset < 0 || limit < 0) {
 			return new Error(10, "Offset and limit cannot be negative!");
 		}
+		if (label == null) label = "";
+		if (sorted == null) sorted = false;
 		System.out.println("Getting Instance List");
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
@@ -106,9 +130,46 @@ public class BackendSystem {
 			return new Error(-1, "Server Error.");
 		}
 		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
-		System.out.println("Getting Instance List successful!");
+		if (jsonArray == null) jsonArray = new JSONArray();
 		
-		return jsonArray.subList(Math.min(jsonArray.size(), Math.max(0, offset)), Math.min(jsonArray.size(), offset + limit));
+		System.out.println("Dealing data...");
+		
+		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
+		
+		Set<String> hash = new HashSet<String>();
+		ArrayList<JSONObject> list = new ArrayList<>();
+		
+		final String pattern = "http://edukb.org/knowledge/0.1/instance/.+";
+		
+		for (JSONObject obj : originalList) {
+			if (Pattern.matches(pattern, obj.getString("uri")) && (label.equals("") || label.equals(obj.getString("category")))) {
+				String name = obj.getString("label");
+				if (!hash.contains(name)) {
+					hash.add(name);
+					JSONObject newObj = new JSONObject();
+					newObj.put("label", name);
+					newObj.put("category", obj.getString("category"));
+					newObj.put("relevancy", getRelevancy(name, searchKey));
+					list.add(newObj);
+				}
+			}
+		}
+		
+		if (sorted) {
+			list.sort(new Comparator<JSONObject>(){
+
+				@Override
+				public int compare(JSONObject o1, JSONObject o2) {
+					int flag = o2.getInteger("relevancy").compareTo(o1.getInteger("relevancy"));
+					if (flag == 0) flag = o1.getString("label").compareTo(o2.getString("label"));
+					return flag;
+				}
+				
+			});
+		}
+		
+		System.out.println("Getting Instance List successful!");
+		return list.subList(Math.min(list.size(), Math.max(0, offset)), Math.min(list.size(), offset + limit));
 	}
 	
 	/**

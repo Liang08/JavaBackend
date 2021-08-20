@@ -69,9 +69,26 @@ Get
 | searchKey | String | Param | 关键字，非空 |
 | offset | Integer | Param | 偏移量，缺省值0 |
 | limit | Integer | Param | 获取个数，缺省值50 |
+| label | String | Param | 筛选标签，默认不筛选 |
+| sorted | Boolean | Param | 是否按相关度排序，默认不排序 |
 | token | String | Param | token |
 ### 返回值
 列表:List
+### 返回样例
+```json
+[
+    {
+        "relevancy": 22,
+        "label": "初唐四杰",
+        "category": "人物"
+    },
+    {
+        "relevancy": 19,
+        "label": "唐宋八大家",
+        "category": "人物"
+    }
+]
+```
 
 
 ### 实体详情接口
@@ -141,6 +158,12 @@ Get
 | token | String | Param | token |
 ### 返回值
 String[]
+### 返回样例
+```json
+[
+    "李白"
+]
+```
 
 
 ### 清除实体访问历史记录接口
@@ -165,6 +188,12 @@ Get
 | token | String | Param | token |
 ### 返回值
 String[]
+### 返回样例
+```json
+[
+    "李白"
+]
+```
 
 
 ### 设置收藏接口
@@ -203,6 +232,20 @@ Get
 | token | String | Param | token |
 ### 返回值
 ImmutablePair<String, String>[]
+### 返回样例
+```json
+[
+    {
+        "chinese": "李"
+    },
+    {
+        "chinese": "杜"
+    },
+    {
+        "chinese": "阿房宫"
+    }
+]
+```
 
 
 ### 清除搜索历史记录接口
@@ -215,3 +258,31 @@ Put
 | token | String | RequestBody | token |
 ### 返回值
 null
+
+
+### 热门标签接口
+/getHotLabel
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| subject | String | Param | 学科 |
+| token | String | Param | token |
+### 返回值
+String[]
+### 返回样例
+```json
+[
+    "人物",
+    "作品",
+    "作文",
+    "修辞手法",
+    "古代诗歌",
+    "句子",
+    "句式",
+    "字形",
+    "字音",
+    "对联"
+]
+```
