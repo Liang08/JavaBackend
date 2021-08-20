@@ -103,6 +103,53 @@ Get
 | token | String | Param | token |
 ### 返回值
 详细信息:JSONObject
+```json
+{
+    "property": [
+        {
+            "predicateLabel": "气候类型",
+            "object": "以热带气候为主，热带草原气候面积广大。东非高原的赤道附近，由于海拔高，气温低，没有形成热带雨林气候。"
+        },
+        {
+            "predicateLabel": "纬度",
+            "object": "主要在南、北回归线之间，赤道穿过中部，绝大部分位于热带，非洲是典型的“热带大陆”"
+        },
+        {
+            "predicateLabel": "特征",
+            "object": "世界上人口自然增长率最高"
+        },
+        ...
+        {
+            "predicateLabel": "特征",
+            "object": "最炎热的大陆，也是最炎热的大洲"
+        },
+        {
+            "predicateLabel": "学术论文",
+            "object": "4131FD21"
+        }
+    ],
+    "label": "非洲",
+    "content": [
+        {
+            "subject_label": "亚洲与非洲",
+            "predicate_label": "强相关于"
+        },
+        {
+            "subject_label": "圣多美和普林西比",
+            "predicate_label": "位于"
+        },
+        {
+            "predicate_label": "实体限制",
+            "object_label": "粮食问题"
+        },
+		...
+        {
+            "subject_label": "加纳",
+            "predicate_label": "位于"
+        }
+    ]
+}
+```
 
 
 ### 问答接口

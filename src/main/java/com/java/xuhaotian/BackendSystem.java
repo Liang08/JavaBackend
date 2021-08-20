@@ -201,9 +201,47 @@ public class BackendSystem {
 			System.out.println("ERR: getInstanceList in BackendSystem\n" + response);
 			return new Error(-1, "Server Error.");
 		}
-		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
+		JSONObject jsonObject = JSONObject.parseObject(response.getBody()).getJSONObject("data");
+		if (jsonObject == null) {
+			return new Error(15, "Invalid query.");
+		}
+		
+		System.out.println("Dealing data...");
+		
+		List<JSONObject> originalProperty = jsonObject.getJSONArray("property").toJavaList(JSONObject.class);
+		JSONArray property = new JSONArray();
+		for (JSONObject obj : originalProperty) {
+			if (!obj.getString("object").startsWith("http")) {
+				JSONObject newObj = new JSONObject();
+				newObj.put("predicateLabel", obj.get("predicateLabel"));
+				newObj.put("object", obj.getString("object"));
+				property.add(newObj);
+			}
+		}
+		jsonObject.put("property", property);
+		
+		final String pattern = "http://edukb.org/knowledge/0.1/instance/.+";
+		
+		List<JSONObject> originalContent = jsonObject.getJSONArray("content").toJavaList(JSONObject.class);
+		JSONArray content = new JSONArray();
+		for (JSONObject obj : originalContent) {
+			if (obj.containsKey("object") && Pattern.matches(pattern, obj.getString("object"))) {
+				JSONObject newObj = new JSONObject();
+				newObj.put("predicate_label", obj.get("predicate_label"));
+				newObj.put("object_label", obj.getString("object_label"));
+				content.add(newObj);
+			}
+			else if (obj.containsKey("subject") && Pattern.matches(pattern, obj.getString("subject"))) {
+				JSONObject newObj = new JSONObject();
+				newObj.put("predicate_label", obj.get("predicate_label"));
+				newObj.put("subject_label", obj.getString("subject_label"));
+				content.add(newObj);
+			}
+		}
+		jsonObject.put("content", content);
+		
 		System.out.println("Getting Info By Instance Name successful!");
-		return jsonObject.get("data");
+		return jsonObject;
 	}
 	
 	/**

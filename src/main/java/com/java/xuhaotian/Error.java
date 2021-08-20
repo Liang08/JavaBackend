@@ -17,6 +17,7 @@ package com.java.xuhaotian;
  * 12:uriName empty when getQuestionListByUriName
  * 13:offset or limit negative when getQuestionListByUriName
  * 14:password empty when modifying password
+ * 15:invalid query when getInfoByInstanceName
  * @author xht13127
  * 
  */
