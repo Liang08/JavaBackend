@@ -1,3 +1,6 @@
+# 版本
+1.0.1
+
 # 运行
 命令行输入mvnw spring-boot:run
 
@@ -142,7 +145,7 @@ Get
             "predicate_label": "实体限制",
             "object_label": "粮食问题"
         },
-		...
+        ...
         {
             "subject_label": "加纳",
             "predicate_label": "位于"
@@ -241,7 +244,7 @@ String[]
 ```json
 [
     "李白",
-	"杜甫"
+    "杜甫"
 ]
 ```
 
