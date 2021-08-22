@@ -49,7 +49,7 @@ public class UserSystem {
 		return null;
 	}
 	
-	public static Error modifyPassword(User user, String oldPassword, String newPassword) {
+	public static Object modifyPassword(User user, String oldPassword, String newPassword) {
 		if (user == null) {
 			return new Error(9, "Require logged in.");
 		}
@@ -59,10 +59,9 @@ public class UserSystem {
 		else if (newPassword == null || newPassword.isEmpty()) {
 			return new Error(14, "Password cannot be empty!");
 		}
-		else {
-			user.modifyPassword(newPassword);
-		}
-		return null;
+		user.modifyPassword(newPassword);
+		user.setToken();
+		return user.getToken();
 	}
 	
 	public static User getUserByToken(String token) {

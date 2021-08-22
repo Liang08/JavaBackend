@@ -58,7 +58,7 @@ Put
 | newPassword | String | RequestBody | 新密码，非空 |
 | token | String | RequestBody | token |
 ### 返回值
-null
+token:String
 
 
 ### 实体列表接口

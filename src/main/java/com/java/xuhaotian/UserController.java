@@ -43,7 +43,7 @@ public class UserController {
 	/**
 	 * 用户登出
 	 * @param param包括token，String类型，要求非空
-	 * @return 如果登出失败返回错误信息，成功(200)返回空
+	 * @return 如果登出失败返回错误信息，成功(200)返回Token(String类型)
 	 */
 	@PutMapping(value = "/logout")
 	public ResponseEntity<?> logout(@RequestBody JSONObject param) {
@@ -64,9 +64,9 @@ public class UserController {
 		String oldPassword = param.getString("oldPassword");
 		String newPassword = param.getString("newPassword");
 		String token = param.getString("token");
-		Error error = UserSystem.modifyPassword(UserSystem.getUserByToken(token), oldPassword, newPassword);
-		if (error == null) return new ResponseEntity<>(null, HttpStatus.OK);
-		else if (error instanceof Error) return new ResponseEntity<Error>(error, HttpStatus.UNAUTHORIZED);
+		Object obj = UserSystem.modifyPassword(UserSystem.getUserByToken(token), oldPassword, newPassword);
+		if (obj instanceof Error) return new ResponseEntity<Error>((Error)obj, HttpStatus.UNAUTHORIZED);
+		else if (obj instanceof String) return new ResponseEntity<String>((String)obj, HttpStatus.OK);
 		else return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
