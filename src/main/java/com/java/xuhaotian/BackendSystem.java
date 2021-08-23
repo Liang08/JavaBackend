@@ -139,7 +139,7 @@ public class BackendSystem {
 		Set<String> hash = new HashSet<String>();
 		ArrayList<JSONObject> list = new ArrayList<>();
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/.+";
+		final String pattern = "http://edukb.org/knowledge/0.1/instance/" + course + "#.+";
 		
 		for (JSONObject obj : originalList) {
 			if (Pattern.matches(pattern, obj.getString("uri")) && (label.equals("") || label.equals(obj.getString("category")))) {
@@ -148,6 +148,7 @@ public class BackendSystem {
 					hash.add(name);
 					JSONObject newObj = new JSONObject();
 					newObj.put("label", name);
+					newObj.put("course", course);
 					newObj.put("category", obj.getString("category"));
 					newObj.put("relevancy", getRelevancy(name, searchKey));
 					list.add(newObj);
@@ -174,15 +175,14 @@ public class BackendSystem {
 	
 	/**
 	 * 实体详情接口
-	 * @param course学科（可选）
+	 * @param course学科
 	 * @param name实体名称
 	 * @return JSON格式的实体详情
 	 */
 	public static Object getInfoByInstanceName(String course, String name) {
-		if (name == null || name.isEmpty()) {
-			return new Error(7, "Name cannot be empty!");
+		if (name == null || name.isEmpty() || course == null || course.isEmpty()) {
+			return new Error(7, "Name and Course cannot be empty!");
 		}
-		if (course == null) course = "";
 		System.out.println("Getting Info By Instance Name");
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
@@ -213,29 +213,38 @@ public class BackendSystem {
 		for (JSONObject obj : originalProperty) {
 			if (!obj.getString("object").startsWith("http")) {
 				JSONObject newObj = new JSONObject();
-				newObj.put("predicateLabel", obj.get("predicateLabel"));
+				newObj.put("predicateLabel", obj.getString("predicateLabel"));
 				newObj.put("object", obj.getString("object"));
 				property.add(newObj);
 			}
 		}
 		jsonObject.put("property", property);
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/.+";
+		final String pattern = "http://edukb.org/knowledge/0.1/instance/([^#]+)#.+";
+		final Pattern r = Pattern.compile(pattern);
 		
 		List<JSONObject> originalContent = jsonObject.getJSONArray("content").toJavaList(JSONObject.class);
 		JSONArray content = new JSONArray();
 		for (JSONObject obj : originalContent) {
-			if (obj.containsKey("object") && Pattern.matches(pattern, obj.getString("object"))) {
-				JSONObject newObj = new JSONObject();
-				newObj.put("predicate_label", obj.get("predicate_label"));
-				newObj.put("object_label", obj.getString("object_label"));
-				content.add(newObj);
+			if (obj.containsKey("object")) {
+				Matcher m = r.matcher(obj.getString("object"));
+				if (m.find()) {
+					JSONObject newObj = new JSONObject();
+					newObj.put("predicate_label", obj.getString("predicate_label"));
+					newObj.put("object_label", obj.getString("object_label"));
+					newObj.put("object_course", m.group(1));
+					content.add(newObj);
+				}
 			}
-			else if (obj.containsKey("subject") && Pattern.matches(pattern, obj.getString("subject"))) {
-				JSONObject newObj = new JSONObject();
-				newObj.put("predicate_label", obj.get("predicate_label"));
-				newObj.put("subject_label", obj.getString("subject_label"));
-				content.add(newObj);
+			else if (obj.containsKey("subject")) {
+				Matcher m = r.matcher(obj.getString("subject"));
+				if (m.find()) {
+					JSONObject newObj = new JSONObject();
+					newObj.put("predicate_label", obj.getString("predicate_label"));
+					newObj.put("subject_label", obj.getString("subject_label"));
+					newObj.put("subject_course", m.group(1));
+					content.add(newObj);
+				}
 			}
 		}
 		jsonObject.put("content", content);
@@ -307,9 +316,34 @@ public class BackendSystem {
 			System.out.println("ERR: linkInstance in BackendSystem\n" + response);
 			return new Error(-1, "Server Error.");
 		}
-		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
+		JSONObject jsonObject = JSONObject.parseObject(response.getBody()).getJSONObject("data");
+		if (jsonObject == null) jsonObject = new JSONObject();
+		JSONArray jsonArray = jsonObject.getJSONArray("results");
+		if (jsonArray == null) jsonArray = new JSONArray();
+		
+		System.out.println("Dealing data...");
+		
+		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
+		ArrayList<JSONObject> list = new ArrayList<>();
+		
+		final String pattern = "http://edukb.org/knowledge/0.1/instance/([^#]+)#.+";
+		final Pattern r = Pattern.compile(pattern);
+		
+		for (JSONObject obj : originalList) {
+			Matcher m = r.matcher(obj.getString("entity_url"));
+			if (m.find()) {
+				JSONObject newObj = new JSONObject();
+				newObj.put("entity_type", obj.getString("entity_type"));
+				newObj.put("entity", obj.getString("entity"));
+				newObj.put("entity_course", m.group(1));
+				newObj.put("start_index", obj.getIntValue("start_index"));
+				newObj.put("end_index", obj.getIntValue("end_index"));
+				list.add(newObj);
+			}
+		}
+		
 		System.out.println("Linking Instance successful!");
-		return jsonObject.get("data");
+		return list;
 	}
 	
 	/**

@@ -9,7 +9,7 @@ package com.java.xuhaotian;
  * 4:userName not exist when login
  * 5:password incorrect
  * 6:course or searchKey empty when getInstanceList
- * 7:name empty when getInfoByInstanceName
+ * 7:name or course empty when getInfoByInstanceName
  * 8:inputQuestion empty when inputQuestion
  * 9:not logged in
  * 10:offset or limit negative when getInstanceList

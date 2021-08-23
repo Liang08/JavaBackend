@@ -1,5 +1,5 @@
 # 版本
-1.0.2
+1.0.6
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -81,11 +81,13 @@ Get
 ```json
 [
     {
+        "course": "chinese",
         "relevancy": 22,
         "label": "初唐四杰",
         "category": "人物"
     },
     {
+        "course": "chinese",
         "relevancy": 19,
         "label": "唐宋八大家",
         "category": "人物"
@@ -101,7 +103,7 @@ Get
 ### 参数
 | 名称 | 类型 | 位置 | 描述 |
 | ---- | ---- | ---- | ---- |
-| course | String | Param | 学科，可选 |
+| course | String | Param | 学科 |
 | name | String | Param | 实体名，非空 |
 | token | String | Param | token |
 ### 返回值
@@ -110,45 +112,37 @@ Get
 {
     "property": [
         {
-            "predicateLabel": "气候类型",
-            "object": "以热带气候为主，热带草原气候面积广大。东非高原的赤道附近，由于海拔高，气温低，没有形成热带雨林气候。"
+            "predicateLabel": "措施",
+            "object": "控制人口增长，提高农业生产水平，保护生态环境，是撒哈拉以南非洲国家解决人口、粮食、环境问题的重要措施。"
         },
         {
-            "predicateLabel": "纬度",
-            "object": "主要在南、北回归线之间，赤道穿过中部，绝大部分位于热带，非洲是典型的“热带大陆”"
-        },
-        {
-            "predicateLabel": "特征",
-            "object": "世界上人口自然增长率最高"
+            "predicateLabel": "地理位置",
+            "object": "跨东西两半球"
         },
         ...
         {
-            "predicateLabel": "特征",
-            "object": "最炎热的大陆，也是最炎热的大洲"
-        },
-        {
-            "predicateLabel": "学术论文",
-            "object": "4131FD21"
+            "predicateLabel": "气候",
+            "object": "以热带气候为主，热带草原气候面积广大。东非高原的赤道附近，由于海拔高，气温低，没有形成热带雨林气候。"
         }
     ],
     "label": "非洲",
     "content": [
         {
             "subject_label": "亚洲与非洲",
-            "predicate_label": "强相关于"
-        },
-        {
-            "subject_label": "圣多美和普林西比",
-            "predicate_label": "位于"
-        },
-        {
-            "predicate_label": "实体限制",
-            "object_label": "粮食问题"
+            "predicate_label": "强相关于",
+            "subject_course": "geo"
         },
         ...
         {
+            "object_course": "geo",
+            "predicate_label": "部分于",
+            "object_label": "七大洲"
+        },
+		...
+        {
             "subject_label": "加纳",
-            "predicate_label": "位于"
+            "predicate_label": "位于",
+            "subject_course": "geo"
         }
     ]
 }
@@ -166,7 +160,71 @@ Post
 | inputQuestion | String | RequestBody | 问题，非空 |
 | token | String | RequestBody | token |
 ### 返回值
-回答:JSONObject
+回答:JSONArray
+### 返回样例
+```
+苏轼字什么？
+[
+    {
+        "all": "",
+        "fsanswer": "",
+        "subject": "苏轼",
+        "message": "",
+        "tamplateContent": "(?<title>(.*)?)字(是)?什么(.*)?",
+        "fs": 0,
+        "filterStr": "",
+        "subjectUri": "http://edukb.org/knowledge/0.1/instance/chinese#-19af7078638913cdd1bf94ed98dd9052",
+        "predicate": "字",
+        "score": 28.284271247461902,
+        "answerflag": false,
+        "attention": "",
+        "fsscore": "",
+        "value": "子瞻"
+    }
+]
+```
+```json
+水调歌头作者是谁？
+[
+    {
+        "all": "",
+        "fsanswer": "",
+        "subject": "水调歌头",
+        "message": "",
+        "tamplateContent": "(?<title>(.*)?)作者(.*)?",
+        "fs": 0,
+        "filterStr": "",
+        "subjectUri": "http://edukb.org/knowledge/0.1/instance/chinese#gushiwen_view_60035",
+        "predicate": "作者",
+        "score": 40,
+        "answerflag": false,
+        "attention": "",
+        "fsscore": "",
+        "value": "▲京镗▲侯置▲俞国宝▲冯取洽▲刘一止▲刘克庄▲刘望之▲刘清夫▲刘辰翁▲刘过▲利登▲华岳▲叶梦得▲向滈▲吕渭老▲吴渊▲吴潜▲吴镒▲周紫芝▲夏元鼎▲岳甫▲张元干▲张嗣初▲张孝祥▲张继先▲易祓▲晁端礼▲曹勋▲曾布▲曾觌▲朱敦儒▲朱熹▲李光▲李曾伯▲杨炎正▲林淳▲汪莘▲沈瀛▲王千秋▲王灼▲王罙高▲王质▲甄龙友▲石孝友▲程大昌▲管鉴▲胡寅▲苏 轼▲苏轼▲范成大▲葛立方▲葛胜仲▲葛郯▲葛长庚▲蔡伸▲袁去华▲贺铸▲赵善括▲赵师侠▲赵希蓬▲赵彦端▲辛弃疾▲陈三聘▲陈居仁▲陈敷▲韩元吉▲韩玉▲魏了翁"
+    }
+]
+```
+```json
+明月几时有作者是谁？
+[
+    {
+        "all": "",
+        "fsanswer": "",
+        "subject": "苏轼",
+        "message": "",
+        "tamplateContent": "(?<title>(.*)?)(作者是|是谁写的)(.*)?",
+        "fs": 2,
+        "filterStr": "明月几时有",
+        "subjectUri": "http://edukb.org/knowledge/0.1/instance/chinese#-19af7078638913cdd1bf94ed98dd9052",
+        "predicate": "主要作品",
+        "score": 4.856241650445832,
+        "answerflag": true,
+        "attention": "",
+        "fsscore": "",
+        "value": "《水调歌头》（明月几时有）"
+    }
+]
+```
 
 
 ### 知识链接接口
@@ -180,7 +238,42 @@ Post
 | course | String | RequestBody | 学科，可选 |
 | token | String | RequestBody | token |
 ### 返回值
-知识标注:JSONObject
+知识标注:List
+### 返回样例
+```json
+"course":""
+"context":"水调歌头（明月几时有）是北宋苏轼的词"
+[
+    {
+        "entity_type": "宋词",
+        "start_index": 0,
+        "end_index": 3,
+        "entity_course": "chinese",
+        "entity": "水调歌头"
+    },
+    {
+        "entity_type": "作品",
+        "start_index": 5,
+        "end_index": 6,
+        "entity_course": "chinese",
+        "entity": "明月"
+    },
+    {
+        "entity_type": "朝代",
+        "start_index": 12,
+        "end_index": 13,
+        "entity_course": "history",
+        "entity": "北宋"
+    },
+    {
+        "entity_type": "文化名人",
+        "start_index": 14,
+        "end_index": 15,
+        "entity_course": "history",
+        "entity": "苏轼"
+    }
+]
+```
 
 
 ### 实体相关习题列表接口
