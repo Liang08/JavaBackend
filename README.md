@@ -1,5 +1,5 @@
 # 版本
-1.0.6
+1.0.7
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -332,12 +332,16 @@ Get
 | ---- | ---- | ---- | ---- |
 | token | String | Param | token |
 ### 返回值
-String[]
+实体访问历史记录:ImmutablePair<String, String>[]
 ### 返回样例
 ```json
 [
-    "李白",
-    "杜甫"
+    {
+        "chinese": "李白"
+    },
+    {
+        "chinese": "杜甫"
+    }
 ]
 ```
 
@@ -363,11 +367,13 @@ Get
 | ---- | ---- | ---- | ---- |
 | token | String | Param | token |
 ### 返回值
-收藏列表:String[]
+收藏列表:ImmutablePair<String, String>[]
 ### 返回样例
 ```json
 [
-    "李白"
+    {
+        "chinese": "李白"
+    }
 ]
 ```
 
@@ -379,6 +385,7 @@ PUT
 ### 参数
 | 名称 | 类型 | 位置 | 描述 |
 | ---- | ---- | ---- | ---- |
+| course | String | RequestBody | 学科 |
 | name | String | RequestBody | 实体名 |
 | token | String | RequestBody | token |
 ### 返回值
@@ -392,6 +399,7 @@ PUT
 ### 参数
 | 名称 | 类型 | 位置 | 描述 |
 | ---- | ---- | ---- | ---- |
+| course | String | RequestBody | 学科 |
 | name | String | RequestBody | 实体名 |
 | token | String | RequestBody | token |
 ### 返回值

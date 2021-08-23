@@ -1,5 +1,6 @@
 package com.java.xuhaotian;
 
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +17,8 @@ public class User {
 	private final String userName;
 	private String password;
 	private String token;
-	History<String> instanceHistory;
-	Set<String> favourite;
+	History<ImmutablePair<String, String>> instanceHistory;
+	Set<ImmutablePair<String, String>> favourite;
 	History<ImmutablePair<String, String>> searchHistory;
 	
 	@SuppressWarnings("unchecked")
@@ -25,8 +26,9 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.token = "";
-		instanceHistory = new History<String>(String.class, 30);
-		favourite = new HashSet<String>();
+		instanceHistory = new History<ImmutablePair<String, String>>(
+				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 30);
+		favourite = new HashSet<ImmutablePair<String, String>>();
 		searchHistory = new History<ImmutablePair<String, String>>(
 				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 30);
 	}
@@ -51,7 +53,7 @@ public class User {
 		return token;
 	}
 	
-	public void addInstanceHistory(String instance) {
+	public void addInstanceHistory(ImmutablePair<String, String> instance) {
 		instanceHistory.addHistory(instance);
 	}
 	
@@ -59,20 +61,22 @@ public class User {
 		instanceHistory.clear();
 	}
 	
-	public String[] getInstanceHistory() {
+	public ImmutablePair<String, String>[] getInstanceHistory() {
 		return instanceHistory.getHistory();
 	}
 	
-	public void setFavourite(String instance) {
+	public void setFavourite(ImmutablePair<String, String> instance) {
 		favourite.add(instance);
 	}
 	
-	public void resetFavourite(String instance) {
+	public void resetFavourite(ImmutablePair<String, String> instance) {
 		favourite.remove(instance);
 	}
 	
-	public String[] getFavouriteList() {
-		return favourite.toArray(new String[0]);
+	@SuppressWarnings("unchecked")
+	public ImmutablePair<String, String>[] getFavouriteList() {
+		return favourite.toArray((ImmutablePair<String, String>[])Array.newInstance(
+				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 0));
 	}
 	
 	public void addSearchHistory(ImmutablePair<String, String> search) {

@@ -63,7 +63,7 @@ public class KnowledgeController {
 		Object obj = BackendSystem.getInfoByInstanceName(course, name);
 		if (obj instanceof Error) return new ResponseEntity<Error>((Error)obj, HttpStatus.NOT_ACCEPTABLE);
 		else if (obj instanceof JSONObject) {
-			user.addInstanceHistory(name);
+			user.addInstanceHistory(ImmutablePair.of(course, name));
 			return new ResponseEntity<JSONObject>((JSONObject)obj, HttpStatus.OK);
 		}
 		else {
@@ -141,13 +141,13 @@ public class KnowledgeController {
 	/**
 	 * 获取实体访问历史记录
 	 * @param token
-	 * @return 如果失败返回错误信息，成功（200）返回实体名数组(String[]类型)
+	 * @return 如果失败返回错误信息，成功（200）返回学科-实体名键值对数组(ImmutablePair<String, String>[]类型)
 	 */
 	@GetMapping(value = "/getInstanceHistory")
 	public ResponseEntity<?> getInstanceHistory(@RequestParam(value="token") String token) {
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		String []history;
+		ImmutablePair<String, String>[] history;
 		try {
 			history = user.getInstanceHistory();
 		}
@@ -175,56 +175,64 @@ public class KnowledgeController {
 	/**
 	 * 获取收藏实体列表
 	 * @param token
-	 * @return 成功（200）返回实体名数组(String[]类型)
+	 * @return 成功（200）返回学科-实体名键值对数组(ImmutablePair<String, String>[]类型)
 	 */
 	@GetMapping(value = "/getFavourite")
 	public ResponseEntity<?> getFavourite(@RequestParam(value="token") String token) {
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		String []favourite = user.getFavouriteList();
+		ImmutablePair<String, String>[] favourite = user.getFavouriteList();
 		return new ResponseEntity<>(favourite, HttpStatus.OK);
 	}
 	
 	/**
 	 * 设置收藏
-	 * @param param包括name和token，都是String
+	 * @param param包括course,name和token，都是String
 	 * @return 成功（200）返回null
 	 */
 	@PutMapping(value = "/setFavourite")
 	public ResponseEntity<?> setFavourite(@RequestBody JSONObject param) {
+		String course = param.getString("course");
 		String name = param.getString("name");
 		String token = param.getString("token");
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		user.setFavourite(name);
+		if (course == null || course .isEmpty() || name == null || name.isEmpty()) {
+			return new ResponseEntity<Error>(new Error(16, "Course and Name cannot be empty!"), HttpStatus.BAD_REQUEST);
+		}
+		user.setFavourite(ImmutablePair.of(course, name));
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 	
 	/**
 	 * 取消收藏
-	 * @param param包括name和token，都是String
+	 * @param param包括course,name和token，都是String
 	 * @return 成功（200）返回null
 	 */
 	@PutMapping(value = "/resetFavourite")
 	public ResponseEntity<?> resetFavourite(@RequestBody JSONObject param) {
+		String course = param.getString("course");
 		String name = param.getString("name");
 		String token = param.getString("token");
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		user.resetFavourite(name);
+		if (course == null || course .isEmpty() || name == null || name.isEmpty()) {
+			return new ResponseEntity<Error>(new Error(16, "Course and Name cannot be empty!"), HttpStatus.BAD_REQUEST);
+		}
+		user.resetFavourite(ImmutablePair.of(course, name));
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 	
 	/**
 	 * 获取搜索历史记录
 	 * @param token
-	 * @return 如果失败返回错误信息，成功（200）返回学科-关键字键值对数组(String[]类型)
+	 * @return 如果失败返回错误信息，成功（200）返回学科-关键字键值对数组(ImmutablePair<String, String>[]类型)
 	 */
 	@GetMapping(value = "/getSearchHistory")
 	public ResponseEntity<?> getSearchHistory(@RequestParam(value="token") String token) {
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		ImmutablePair<String, String>[]history;
+		ImmutablePair<String, String>[] history;
 		try {
 			history = user.getSearchHistory();
 		}
