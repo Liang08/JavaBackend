@@ -60,7 +60,9 @@ public class UserSystem {
 			return new Error(14, "Password cannot be empty!");
 		}
 		user.modifyPassword(newPassword);
+		tokenMap.remove(user.getToken(), user);
 		user.setToken();
+		tokenMap.put(user.getToken(), user);
 		return user.getToken();
 	}
 	
