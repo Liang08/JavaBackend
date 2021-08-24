@@ -10,6 +10,7 @@ public class JavaBackendApplication {
 		SpringApplication.run(JavaBackendApplication.class, args);
 		BackendSystem.login("g4dadfh4", "18551209967");
 		DataSystem.loadData();
+		DataSystem.initHotInstance();
 	}
 
 }

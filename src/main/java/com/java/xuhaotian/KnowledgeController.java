@@ -271,4 +271,19 @@ public class KnowledgeController {
 		ArrayList<String> hotLabel = DataSystem.getHotLabel(subject);
 		return new ResponseEntity<>(hotLabel, HttpStatus.OK);
 	}
+	
+	/**
+	 * 获取热门实体列表
+	 * @param subject学科
+	 * @param token
+	 * @return 成功（200）返回热门实体数组(String[]类型)
+	 */
+	@GetMapping(value = "/getHotInstance")
+	public ResponseEntity<?> getHotInstance(@RequestParam(value="subject") String subject,
+			@RequestParam(value="token") String token) {
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		ArrayList<String> hotInstance = DataSystem.getHotInstance(subject);
+		return new ResponseEntity<>(hotInstance, HttpStatus.OK);
+	}
 }
