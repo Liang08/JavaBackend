@@ -1,5 +1,5 @@
 # 版本
-1.1.1
+1.1.2
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -126,6 +126,7 @@ Get
         }
     ],
     "label": "非洲",
+	"isFavourite": false,
     "content": [
         {
             "subject_label": "亚洲与非洲",

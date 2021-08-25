@@ -79,6 +79,10 @@ public class User {
 				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 0));
 	}
 	
+	public boolean isFavourite(ImmutablePair<String, String> instance) {
+		return favourite.contains(instance);
+	}
+	
 	public void addSearchHistory(ImmutablePair<String, String> search) {
 		searchHistory.addHistory(search);
 	}

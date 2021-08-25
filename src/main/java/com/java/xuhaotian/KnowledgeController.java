@@ -64,6 +64,7 @@ public class KnowledgeController {
 		if (obj instanceof Error) return new ResponseEntity<Error>((Error)obj, HttpStatus.NOT_ACCEPTABLE);
 		else if (obj instanceof JSONObject) {
 			user.addInstanceHistory(ImmutablePair.of(course, name));
+			((JSONObject) obj).put("isFavourite", user.isFavourite(ImmutablePair.of(course, name)));
 			return new ResponseEntity<JSONObject>((JSONObject)obj, HttpStatus.OK);
 		}
 		else {
