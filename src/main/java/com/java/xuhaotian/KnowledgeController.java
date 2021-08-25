@@ -225,6 +225,20 @@ public class KnowledgeController {
 	}
 	
 	/**
+	 * 判断实体是否被收藏
+	 * @param token
+	 * @return 成功（200）返回实体是否被收藏（Boolean类型）
+	 */
+	@GetMapping(value = "/isFavourite")
+	public ResponseEntity<?> isFavourite(@RequestParam(value="course") String course, 
+			@RequestParam(value="name") String name, 
+			@RequestParam(value="token") String token) {
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(user.isFavourite(ImmutablePair.of(course, name)), HttpStatus.OK);
+	}
+	
+	/**
 	 * 获取搜索历史记录
 	 * @param token
 	 * @return 如果失败返回错误信息，成功（200）返回学科-关键字键值对数组(ImmutablePair<String, String>[]类型)

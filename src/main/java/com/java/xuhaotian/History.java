@@ -31,7 +31,7 @@ public class History<T> {
 			if (tmp == null) break;
 			res.add(tmp);
 		}
-		System.out.println("getHistory successful" + res);
+		System.out.println("getHistory successful");
 		return res.toArray((T[]) Array.newInstance(componentType, 0));
 	}
 

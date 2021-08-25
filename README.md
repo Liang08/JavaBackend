@@ -1,5 +1,5 @@
 # 版本
-1.1.2
+1.1.3
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -405,6 +405,24 @@ PUT
 | token | String | RequestBody | token |
 ### 返回值
 null
+
+
+### 判断收藏接口
+/isFavourite
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| course | String | Param | 学科 |
+| name | String | Param | 实体名 |
+| token | String | Param | token |
+### 返回值
+是否收藏:Boolean
+### 返回样例
+```json
+true
+```
 
 
 ### 搜索历史记录接口
