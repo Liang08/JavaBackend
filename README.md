@@ -1,5 +1,5 @@
 # 版本
-1.1.3
+1.2.5
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -112,38 +112,60 @@ Get
 {
     "property": [
         {
-            "predicateLabel": "措施",
-            "object": "控制人口增长，提高农业生产水平，保护生态环境，是撒哈拉以南非洲国家解决人口、粮食、环境问题的重要措施。"
+            "predicateLabel": "人口特征",
+            "object": "90%以上为黑种人，被称为“黑种人的故乡”。<br>"
+        },
+        {
+            "predicateLabel": "特征",
+            "object": "世界上人口自然增长率最高<br>最炎热的大陆，也是最炎热的大洲<br>"
         },
         {
             "predicateLabel": "地理位置",
-            "object": "跨东西两半球"
+            "object": "赤道穿过<br>跨东西两半球<br>"
+        },
+        {
+            "predicateLabel": "别名",
+            "object": "贫穷大陆<br>热带大陆<br>富饶大陆<br>高原大陆<br>"
         },
         ...
         {
-            "predicateLabel": "气候",
-            "object": "以热带气候为主，热带草原气候面积广大。东非高原的赤道附近，由于海拔高，气温低，没有形成热带雨林气候。"
+            "predicateLabel": "措施",
+            "object": "控制人口增长，提高农业生产水平，保护生态环境，是撒哈拉以南非洲国家解决人口、粮食、环境问题的重要措施。<br>"
+        },
+        {
+            "predicateLabel": "面积",
+            "object": "3000万平方千米<br>"
         }
     ],
     "label": "非洲",
-	"isFavourite": false,
+    "isFavourite": true,
     "content": [
         {
-            "subject_label": "亚洲与非洲",
-            "predicate_label": "强相关于",
-            "subject_course": "geo"
+            "predicate_label": "穿过",
+            "content": [
+                {
+                    "subject_label": "南回归线",
+                    "subject_course": "geo"
+                },
+                {
+                    "subject_label": "北回归线",
+                    "subject_course": "geo"
+                },
+                {
+                    "subject_label": "赤道",
+                    "subject_course": "geo"
+                }
+            ]
         },
         ...
         {
-            "object_course": "geo",
-            "predicate_label": "部分于",
-            "object_label": "七大洲"
-        },
-		...
-        {
-            "subject_label": "加纳",
-            "predicate_label": "位于",
-            "subject_course": "geo"
+            "predicate_label": "强相关于",
+            "content": [
+                {
+                    "subject_label": "亚洲与非洲",
+                    "subject_course": "geo"
+                }
+            ]
         }
     ]
 }

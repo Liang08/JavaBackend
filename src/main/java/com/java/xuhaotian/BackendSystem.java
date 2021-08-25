@@ -139,7 +139,7 @@ public class BackendSystem {
 		Set<String> hash = new HashSet<String>();
 		ArrayList<JSONObject> list = new ArrayList<>();
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/" + course + "#.+";
+		final String pattern = "http://edukg.org/knowledge/0.1/instance/" + course + "#.+";
 		
 		for (JSONObject obj : originalList) {
 			if (Pattern.matches(pattern, obj.getString("uri")) && (label.equals("") || label.equals(obj.getString("category")))) {
@@ -210,43 +210,71 @@ public class BackendSystem {
 		
 		List<JSONObject> originalProperty = jsonObject.getJSONArray("property").toJavaList(JSONObject.class);
 		JSONArray property = new JSONArray();
+		Map<String, Set<String>> propertyMap = new HashMap<>();
+		
 		for (JSONObject obj : originalProperty) {
-			if (!obj.getString("object").startsWith("http")) {
-				JSONObject newObj = new JSONObject();
-				newObj.put("predicateLabel", obj.getString("predicateLabel"));
-				newObj.put("object", obj.getString("object"));
-				property.add(newObj);
+			String predicateLabel = obj.getString("predicateLabel");
+			String object = obj.getString("object");
+			if (!object.startsWith("http") && obj.getString("predicate").startsWith("http://edukg.org/knowledge/0.1/property/")) {
+				if (!propertyMap.containsKey(predicateLabel)) {
+					propertyMap.put(predicateLabel, new HashSet<String>());
+				}
+				propertyMap.get(predicateLabel).add(object);
 			}
 		}
+		
+		propertyMap.forEach((predicateLabel, objectSet) -> {
+			StringBuffer stringBuffer = new StringBuffer();
+			objectSet.forEach(str -> stringBuffer.append(str).append("<br>"));
+			JSONObject newObj = new JSONObject();
+			newObj.put("predicateLabel", predicateLabel);
+			newObj.put("object", stringBuffer.toString());
+			property.add(newObj);
+		});
+		
 		jsonObject.put("property", property);
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/([^#]+)#.+";
+		final String pattern = "http://edukg.org/knowledge/0.1/instance/([^#]+)#.+";
 		final Pattern r = Pattern.compile(pattern);
 		
 		List<JSONObject> originalContent = jsonObject.getJSONArray("content").toJavaList(JSONObject.class);
 		JSONArray content = new JSONArray();
+		Map<String, JSONArray> contentMap = new HashMap<>();
 		for (JSONObject obj : originalContent) {
+			String predicateLabel = obj.getString("predicate_label");
+			if (!obj.getString("predicate").startsWith("http://edukg.org/knowledge/0.1/property/")) continue;
 			if (obj.containsKey("object")) {
 				Matcher m = r.matcher(obj.getString("object"));
 				if (m.find()) {
+					if (!contentMap.containsKey(predicateLabel)) {
+						contentMap.put(predicateLabel, new JSONArray());
+					}
 					JSONObject newObj = new JSONObject();
-					newObj.put("predicate_label", obj.getString("predicate_label"));
 					newObj.put("object_label", obj.getString("object_label"));
 					newObj.put("object_course", m.group(1));
-					content.add(newObj);
+					contentMap.get(predicateLabel).add(newObj);
 				}
 			}
 			else if (obj.containsKey("subject")) {
 				Matcher m = r.matcher(obj.getString("subject"));
 				if (m.find()) {
+					if (!contentMap.containsKey(predicateLabel)) {
+						contentMap.put(predicateLabel, new JSONArray());
+					}
 					JSONObject newObj = new JSONObject();
-					newObj.put("predicate_label", obj.getString("predicate_label"));
 					newObj.put("subject_label", obj.getString("subject_label"));
 					newObj.put("subject_course", m.group(1));
-					content.add(newObj);
+					contentMap.get(predicateLabel).add(newObj);
 				}
 			}
 		}
+		
+		contentMap.forEach((predicateLabel, jsonArray) -> {
+			JSONObject newObj = new JSONObject();
+			newObj.put("predicate_label", predicateLabel);
+			newObj.put("content", jsonArray);
+			content.add(newObj);
+		});
 		jsonObject.put("content", content);
 		
 		System.out.println("Getting Info By Instance Name successful!");
@@ -326,7 +354,7 @@ public class BackendSystem {
 		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
 		ArrayList<JSONObject> list = new ArrayList<>();
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/([^#]+)#.+";
+		final String pattern = "http://edukg.org/knowledge/0.1/instance/([^#]+)#.+";
 		final Pattern r = Pattern.compile(pattern);
 		
 		for (JSONObject obj : originalList) {
