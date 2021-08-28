@@ -85,7 +85,7 @@ public class BackendSystem {
 			relevancy += 8;
 		}
 		relevancy -= 3 * (name.length() - relevancy / 10 * key.length());
-		final String pattern = "[,.;/\s，。；、与和]";
+		final String pattern = "[,\\.;/\\s，。；、与和]";
 		final Pattern r = Pattern.compile(pattern);
 		Matcher m = r.matcher(name);
 		while (m.find()) relevancy -= 20;
