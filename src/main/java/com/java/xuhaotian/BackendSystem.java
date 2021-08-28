@@ -135,19 +135,16 @@ public class BackendSystem {
 		System.out.println("Dealing data...");
 		
 		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
-		System.out.println(originalList);
+		
 		Set<String> hash = new HashSet<String>();
 		ArrayList<JSONObject> list = new ArrayList<>();
 		
 		final String pattern = "http://edukb.org/knowledge/0.1/instance/" + course + "#.+";
 		for (JSONObject obj : originalList) {
-			System.out.println(obj);
 			if (Pattern.matches(pattern, obj.getString("uri")) && (label.equals("") || label.equals(obj.getString("category")))) {
-				System.out.println(obj);
 				String name = obj.getString("label");
 				if (!hash.contains(name)) {
 					hash.add(name);
-					System.out.println("add");
 					JSONObject newObj = new JSONObject();
 					newObj.put("label", name);
 					newObj.put("course", course);
@@ -157,7 +154,7 @@ public class BackendSystem {
 				}
 			}
 		}
-		System.out.println(list);
+		
 		if (sorted) {
 			list.sort(new Comparator<JSONObject>(){
 
@@ -170,7 +167,7 @@ public class BackendSystem {
 				
 			});
 		}
-		System.out.println(list);
+		
 		System.out.println("Getting Instance List successful!");
 		return list.subList(Math.min(list.size(), Math.max(0, offset)), Math.min(list.size(), offset + limit));
 	}
