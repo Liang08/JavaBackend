@@ -17,9 +17,10 @@ public class User {
 	private final String userName;
 	private String password;
 	private String token;
-	History<ImmutablePair<String, String>> instanceHistory;
-	Set<ImmutablePair<String, String>> favourite;
-	History<ImmutablePair<String, String>> searchHistory;
+	private History<ImmutablePair<String, String>> instanceHistory;
+	private Set<ImmutablePair<String, String>> favourite;
+	private History<ImmutablePair<String, String>> searchHistory;
+	private Set<Integer> errorBook;
 	
 	@SuppressWarnings("unchecked")
 	public User(String userName, String password) {
@@ -31,6 +32,7 @@ public class User {
 		favourite = new HashSet<ImmutablePair<String, String>>();
 		searchHistory = new History<ImmutablePair<String, String>>(
 				(Class<ImmutablePair<String, String>>) ImmutablePair.of("", "").getClass(), 30);
+		errorBook = new HashSet<>();
 	}
 	
 	public String getUserName() {
@@ -93,5 +95,17 @@ public class User {
 	
 	public void clearSearchHistory() {
 		searchHistory.clear();
+	}
+	
+	public void addError(int id) {
+		errorBook.add(id);
+	}
+	
+	public void removeError(int id) {
+		errorBook.remove(id);
+	}
+	
+	public Set<Integer> getErrorBook() {
+		return errorBook;
 	}
 }

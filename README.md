@@ -1,5 +1,5 @@
 # 版本
-1.2.5
+1.3.1
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -538,4 +538,82 @@ Get
     "三个代表",
     "综合国力"
 ]
+```
+
+
+### 推荐题目接口
+/getRecommandQuestionList
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| limit | Integer | Param | 获取个数，缺省值10 |
+| token | String | Param | token |
+### 返回值
+推荐题目:List
+### 返回样例
+```json
+[
+    {
+        "qAnswer": "A",
+        "A": "水稻",
+        "B": "小麦",
+        "C": "玉米",
+        "D": "粟",
+        "id": 184755,
+        "qBody": "在南宋王朝统治区内,产量居于首位的粮食作物是()"
+    },
+    {
+        "qAnswer": "A",
+        "A": "战国到五代",
+        "B": "传说中的黄帝到汉武帝",
+        "C": "战国到北宋",
+        "D": "春秋到五代",
+        "id": 184792,
+        "qBody": "《资治通鉴》记述的历史时期是()"
+    },
+    {
+        "qAnswer": "A",
+        "A": "①②③④",
+        "B": "①②④③",
+        "C": "①④②③",
+        "D": "①③②④",
+        "id": 184766,
+        "qBody": "下列事件按时间排列,正确的是()①蒙古政权的建立②定国号为元③定都大都④灭亡南宋"
+    }
+]
+```
+
+
+### 记录答题情况接口
+/answerQuestion
+### 方法类型
+POST
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| answer | JSONArray | RequestBody | 作答情况 |
+| token | String | RequestBody | token |
+### 返回值
+null
+### 参数样例
+```json
+{
+    "answer":[
+        {
+            "id":184755,
+            "isCorrect":true
+        },
+        {
+            "id":184792,
+            "isCorrect":false
+        },
+        {
+            "id":184766,
+            "isCorrect":true
+        }
+    ],
+    "token":"ABCDEFG"
+}
 ```

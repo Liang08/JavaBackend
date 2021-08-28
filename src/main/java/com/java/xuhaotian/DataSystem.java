@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.*;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.alibaba.fastjson.JSONObject;
 import com.opencsv.CSVReader;
 
@@ -30,6 +32,7 @@ public class DataSystem {
 	private static final Map<String, Map<String, String>> classLabel = new HashMap<>();
 	
 	private static final Map<Integer, JSONObject> questions = new HashMap<>();
+	private static final Map<String, Set<Integer>> instanceQuestions = new HashMap<>();
 	
 	private static final Map<String, ArrayList<String>> hotInstance = new HashMap<>();
 	
@@ -143,6 +146,20 @@ public class DataSystem {
 
 	public static JSONObject getQuestion(int id) {
 		return questions.get(id);
+	}
+	
+	public static void initQuestionIdSetOfInstance(String name) {
+		if (!instanceQuestions.containsKey(name)) {
+			instanceQuestions.put(name, new LinkedHashSet<>());
+		}
+	}
+	
+	public static void addQuestionIdOfInstance(String name, int id) {
+		instanceQuestions.get(name).add(id);
+	}
+	
+	public static Set<Integer> getQuestionIdSetOfInstance(String name) {
+		return instanceQuestions.get(name);
 	}
 	
 	public static void initHotInstance() {

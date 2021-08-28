@@ -414,10 +414,11 @@ public class BackendSystem {
 		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
 		
 		ArrayList<JSONObject> list = new ArrayList<>();
-		final String pattern0 = "^(?:答案)([ABCD])$";
+		final String pattern0 = "^(?:答案)?[\\.。．\\s]*([ABCD])[\\.。．\\s]*$";
 		final Pattern r0 = Pattern.compile(pattern0);
-		final String pattern1 = "(.+)A\\.(.+)B\\.(.+)C\\.(.+)D\\.(.+)";
+		final String pattern1 = "^\\s*([\\s\\S]+?)\\s*A[\\.．]\\s*([\\s\\S]+?)\\s*B[\\.．]\\s*([\\s\\S]+?)\\s*C[\\.．]\\s*([\\s\\S]+?)\\s*D[\\.．]\\s*([\\s\\S]+?)\\s*$";
 		final Pattern r1 = Pattern.compile(pattern1);
+		DataSystem.initQuestionIdSetOfInstance(uriName);
 		for (JSONObject obj : originalList) {
 			JSONObject newObj = new JSONObject();
 			Matcher m0 = r0.matcher(obj.getString("qAnswer"));
@@ -431,6 +432,8 @@ public class BackendSystem {
 				newObj.put("C", m1.group(4));
 				newObj.put("D", m1.group(5));
 				list.add(newObj);
+				DataSystem.addQuestion(newObj);
+				DataSystem.addQuestionIdOfInstance(uriName, newObj.getIntValue("id"));
 			}
 		}
 		

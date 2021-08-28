@@ -1,7 +1,6 @@
 package com.java.xuhaotian;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.HttpStatus;
@@ -226,6 +225,8 @@ public class KnowledgeController {
 	
 	/**
 	 * 判断实体是否被收藏
+	 * @param course学科，String
+	 * @param name实体名称，String
 	 * @param token
 	 * @return 成功（200）返回实体是否被收藏（Boolean类型）
 	 */
@@ -274,7 +275,7 @@ public class KnowledgeController {
 	
 	/**
 	 * 获取热门标签列表
-	 * @param subject学科
+	 * @param subject学科，String
 	 * @param token
 	 * @return 成功（200）返回热门标签数组(String[]类型)
 	 */
@@ -300,5 +301,75 @@ public class KnowledgeController {
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
 		ArrayList<String> hotInstance = DataSystem.getHotInstance(subject);
 		return new ResponseEntity<>(hotInstance, HttpStatus.OK);
+	}
+
+	/**
+	 * 根据做题及浏览历史记录推荐题目
+	 * @param limit题目数量，Integer，可选，缺省值10
+	 * @param token
+	 * @return
+	 */
+	@GetMapping(value = "/getRecommandQuestionList")
+	public ResponseEntity<?> getRecommandQuestionList(@RequestParam(value="limit",required=false,defaultValue="10") Integer limit, 
+			@RequestParam(value="token") String token) {
+		if (limit == null || limit < 0) limit = 10;
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		Set<Integer> questionIdSet = new HashSet<>();
+		Set<String> instanceNameSet = new HashSet<>(); 
+		ImmutablePair<String, String>[] history = user.getInstanceHistory();
+		double probability = 0.8;
+		for (ImmutablePair<String, String> instance : history) {
+			if (probability < 0.1 || questionIdSet.size() >= 3 * limit) break;
+			String name = instance.getValue();
+			if (instanceNameSet.contains(name)) continue;
+			instanceNameSet.add(name);
+			Set<Integer> set = DataSystem.getQuestionIdSetOfInstance(name);
+			if (set == null) {
+				BackendSystem.getQuestionListByUriName(name, 0, 10);
+				set = DataSystem.getQuestionIdSetOfInstance(name);
+			}
+			final double copy = probability;
+			set.forEach(id -> {
+				if (Math.random() < copy) questionIdSet.add(id);
+			});
+			probability *= 0.9;
+		}
+		user.getErrorBook().forEach(id -> {
+			if (Math.random() < 0.4) questionIdSet.add(id);
+		});
+		List<Integer> idList = new ArrayList<Integer>(questionIdSet);
+		Collections.shuffle(idList);
+		List<JSONObject> questionList = new ArrayList<>();
+		for (int i = 0; i < idList.size() && i < limit; i++) {
+			questionList.add(DataSystem.getQuestion(idList.get(i)));
+		}
+		
+		return new ResponseEntity<>(questionList, HttpStatus.OK);
+	}
+
+	/**
+	 * 记录答题对错情况
+	 * @param param包括answer和token，answer是JSONArray类型，形如[{"id":10,"isCorrect":false},{"id":21,"isCorrect":true},...]
+	 * @return
+	 */
+	@PostMapping(value = "/answerQuestion")
+	public ResponseEntity<?> answer(@RequestBody JSONObject param) {
+		String token = param.getString("token");
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		JSONArray jsonArray = param.getJSONArray("answer");
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = jsonArray.getJSONObject(i);
+			int id = obj.getIntValue("id");
+			boolean isCorrect = obj.getBooleanValue("isCorrect");
+			if (!isCorrect) {
+				user.addError(id);
+			}
+			else {
+				user.removeError(id);
+			}
+		}
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 }
