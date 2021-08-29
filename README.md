@@ -1,5 +1,5 @@
 # 版本
-1.4.2
+1.4.5
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -367,6 +367,20 @@ Get
     }
 ]
 ```
+
+
+### 上传实体访问历史记录接口
+/addInstanceHistory
+### 方法类型
+Post
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| course | String | RequestBody | 学科 |
+| name | String | RequestBody | 实体名 |
+| token | String | RequestBody | token |
+### 返回值
+null
 
 
 ### 清除实体访问历史记录接口

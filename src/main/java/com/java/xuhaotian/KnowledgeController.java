@@ -159,6 +159,25 @@ public class KnowledgeController {
 	}
 	
 	/**
+	 * 上传实体访问历史记录
+	 * @param param包括course,name和token，都是String
+	 * @return 成功（200）返回null
+	 */
+	@PostMapping(value = "/addInstanceHistory")
+	public ResponseEntity<?> addInstanceHistory(@RequestBody JSONObject param) {
+		String course = param.getString("course");
+		String name = param.getString("name");
+		String token = param.getString("token");
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		if (course == null || course .isEmpty() || name == null || name.isEmpty()) {
+			return new ResponseEntity<Error>(new Error(16, "Course and Name cannot be empty!"), HttpStatus.BAD_REQUEST);
+		}
+		user.addInstanceHistory(ImmutablePair.of(course, name));
+		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+	
+	/**
 	 * 清除实体访问历史记录
 	 * @param token
 	 * @return 成功（200）返回null
