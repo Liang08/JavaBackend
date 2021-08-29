@@ -1,5 +1,5 @@
 # 版本
-1.4.1
+1.4.2
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -606,7 +606,7 @@ Get
 
 
 ### 推荐题目接口
-/getRecommandQuestionList
+/getRecommendQuestionList
 ### 方法类型
 Get
 ### 参数

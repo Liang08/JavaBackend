@@ -337,8 +337,8 @@ public class KnowledgeController {
 	 * @param token
 	 * @return 如果失败返回错误信息，成功（200）返回题目列表(List<JSONObject>类型)
 	 */
-	@GetMapping(value = "/getRecommandQuestionList")
-	public ResponseEntity<?> getRecommandQuestionList(@RequestParam(value="limit",required=false,defaultValue="10") Integer limit, 
+	@GetMapping(value = "/getRecommendQuestionList")
+	public ResponseEntity<?> getRecommendQuestionList(@RequestParam(value="limit",required=false,defaultValue="10") Integer limit, 
 			@RequestParam(value="token") String token) {
 		if (limit == null || limit < 0) limit = 10;
 		User user = UserSystem.getUserByToken(token);
