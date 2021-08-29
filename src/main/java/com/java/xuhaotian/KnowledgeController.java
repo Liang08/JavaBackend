@@ -304,10 +304,38 @@ public class KnowledgeController {
 	}
 
 	/**
+	 * 返回专项训练题目列表
+	 * @param limit题目数量，Integer，可选，缺省值10
+	 * @param name实体名，String
+	 * @param token
+	 * @return 如果失败返回错误信息，成功（200）返回题目列表(List<JSONObject>类型)
+	 */
+	@GetMapping(value = "/getSpecialTopicQuestionList")
+	public ResponseEntity<?> getSpecialTopicQuestionList(@RequestParam(value="limit",required=false,defaultValue="10") Integer limit, 
+			@RequestParam(value="name") String name, 
+			@RequestParam(value="token") String token) {
+		if (limit == null || limit < 0) limit = 10;
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		Set<Integer> questionIdSet = DataSystem.getQuestionIdSetOfInstance(name);
+		if (questionIdSet == null) {
+			BackendSystem.getQuestionListByUriName(name, 0, 10);
+			questionIdSet = DataSystem.getQuestionIdSetOfInstance(name);
+		}
+		List<Integer> idList = new ArrayList<Integer>(questionIdSet);
+		Collections.shuffle(idList);
+		List<JSONObject> questionList = new ArrayList<>();
+		for (int i = 0; i < idList.size() && i < limit; i++) {
+			questionList.add(DataSystem.getQuestion(idList.get(i)));
+		}
+		return new ResponseEntity<>(questionList, HttpStatus.OK);
+	}
+	
+	/**
 	 * 根据做题及浏览历史记录推荐题目
 	 * @param limit题目数量，Integer，可选，缺省值10
 	 * @param token
-	 * @return
+	 * @return 如果失败返回错误信息，成功（200）返回题目列表(List<JSONObject>类型)
 	 */
 	@GetMapping(value = "/getRecommandQuestionList")
 	public ResponseEntity<?> getRecommandQuestionList(@RequestParam(value="limit",required=false,defaultValue="10") Integer limit, 
@@ -351,7 +379,7 @@ public class KnowledgeController {
 	/**
 	 * 记录答题对错情况
 	 * @param param包括answer和token，answer是JSONArray类型，形如[{"id":10,"isCorrect":false},{"id":21,"isCorrect":true},...]
-	 * @return
+	 * @return 如果失败返回错误信息，成功（200）返回null
 	 */
 	@PostMapping(value = "/answerQuestion")
 	public ResponseEntity<?> answer(@RequestBody JSONObject param) {
