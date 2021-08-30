@@ -440,4 +440,40 @@ public class BackendSystem {
 		return list.subList(Math.min(list.size(), Math.max(0, offset)), Math.min(list.size(), offset + limit));
 	}
 	
+	/**
+	 * 知识关联详情接口
+	 * @param course学科
+	 * @param subjectName带查询词条
+	 * @return JSONArray
+	 */
+	public static Object getRelatedSubject(String course, String subjectName) {
+		if (course == null || course.isEmpty() || subjectName == null || subjectName.isEmpty()) {
+			return new Error(17, "Course and SubjectName cannot be empty!");
+		}
+		System.out.println("Getting Related Subject");
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+		map.add("course", course);
+		map.add("subjectName", subjectName);
+		map.add("id", id);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		ResponseEntity<String> response = restTemplate.postForEntity(url + "/typeOpen/open/relatedsubject", request, String.class);
+		try {
+			assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		}
+		catch (Exception e) {
+			System.out.println("ERR: getRelatedSubject in BackendSystem\n" + response);
+			return new Error(-1, "Server Error.");
+		}
+		
+		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
+		if (jsonArray == null) jsonArray = new JSONArray();
+		
+		System.out.println("Getting Related Subject successful!");
+		return jsonArray;
+	}
+	
 }

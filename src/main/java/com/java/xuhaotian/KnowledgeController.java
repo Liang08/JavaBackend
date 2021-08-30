@@ -138,6 +138,30 @@ public class KnowledgeController {
 		}
 	}
 	
+	
+	/**
+	 * 获取知识关联详情
+	 * @param course学科，String
+	 * @param subjectName需要查询的相关词条，String
+	 * @param token
+	 * @return 如果失败返回错误信息，成功（200）返回相关知识列表（JSONArray类型）
+	 */
+	@GetMapping(value = "/getRelatedSubject")
+	public ResponseEntity<?> getRelatedSubject(@RequestParam(value="course") String course, 
+			@RequestParam(value="subjectName") String subjectName, 
+			@RequestParam(value="token") String token) {
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		Object obj = BackendSystem.getRelatedSubject(course, subjectName);
+		if (obj instanceof Error) return new ResponseEntity<Error>((Error)obj, HttpStatus.NOT_ACCEPTABLE);
+		else if (obj instanceof JSONArray) return new ResponseEntity<>(obj, HttpStatus.OK);
+		else {
+			System.out.println("ERR: getRelatedSubject in KnowledgeController\n" + obj.getClass());
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
 	/**
 	 * 获取实体访问历史记录
 	 * @param token

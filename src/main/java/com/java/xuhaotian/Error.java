@@ -19,6 +19,7 @@ package com.java.xuhaotian;
  * 14:password empty when modifying password
  * 15:invalid query when getInfoByInstanceName
  * 16:name or course empty when set/reset favourite or setInstanceHistory
+ * 17 course or subjectName empty when getRelatedSubject
  * @author xht13127
  * 
  */

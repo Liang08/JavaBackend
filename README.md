@@ -1,5 +1,5 @@
 # 版本
-1.4.5
+1.5.1
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -341,6 +341,75 @@ Get
         "D": "非洲",
         "id": 183710,
         "qBody": "世界上火山、地震最频繁的地区分布在()"
+    }
+]
+```
+
+
+### 知识关联详情接口
+/getRelatedSubject
+### 方法类型
+Get
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| course | String | Param | 学科，非空 |
+| subjectName | String | Param | 实体名，非空 |
+| token | String | Param | token |
+### 返回值
+关联知识列表:JSONArray
+### 返回样例
+```json
+physics 机械能
+[
+    {
+        "all": "",
+        "fsanswer": "",
+        "subject": "机械能",
+        "message": "",
+        "tamplateContent": "",
+        "fs": 0,
+        "filterStr": "",
+        "subjectUri": "",
+        "predicate": "包含",
+        "score": 0,
+        "answerflag": false,
+        "attention": "",
+        "fsscore": "",
+        "value": "动能"
+    },
+    {
+        "all": "",
+        "fsanswer": "",
+        "subject": "机械能",
+        "message": "",
+        "tamplateContent": "",
+        "fs": 0,
+        "filterStr": "",
+        "subjectUri": "",
+        "predicate": "包含",
+        "score": 0,
+        "answerflag": false,
+        "attention": "",
+        "fsscore": "",
+        "value": "势能"
+    },
+    ...
+    {
+        "all": "",
+        "fsanswer": "",
+        "subject": "能量",
+        "message": "",
+        "tamplateContent": "",
+        "fs": 0,
+        "filterStr": "",
+        "subjectUri": "",
+        "predicate": "包含",
+        "score": 0,
+        "answerflag": false,
+        "attention": "",
+        "fsscore": "",
+        "value": "机械能"
     }
 ]
 ```
