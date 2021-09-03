@@ -1,5 +1,5 @@
 # 版本
-1.5.1
+1.5.3
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -363,53 +363,36 @@ Get
 physics 机械能
 [
     {
-        "all": "",
-        "fsanswer": "",
-        "subject": "机械能",
-        "message": "",
-        "tamplateContent": "",
-        "fs": 0,
-        "filterStr": "",
-        "subjectUri": "",
         "predicate": "包含",
-        "score": 0,
-        "answerflag": false,
-        "attention": "",
-        "fsscore": "",
-        "value": "动能"
+        "subject": "<br>能量<br>"
     },
     {
-        "all": "",
-        "fsanswer": "",
-        "subject": "机械能",
-        "message": "",
-        "tamplateContent": "",
-        "fs": 0,
-        "filterStr": "",
-        "subjectUri": "",
-        "predicate": "包含",
-        "score": 0,
-        "answerflag": false,
-        "attention": "",
-        "fsscore": "",
-        "value": "势能"
+        "predicate": "定义",
+        "value": "<br>动能、重力势能、弹性势能统称为机械能<br><br>物体所具有的动能和势能的和<br>"
     },
-    ...
     {
-        "all": "",
-        "fsanswer": "",
-        "subject": "能量",
-        "message": "",
-        "tamplateContent": "",
-        "fs": 0,
-        "filterStr": "",
-        "subjectUri": "",
+        "predicate": "影响因素",
+        "value": "<br>质量、速度、高度、弹性形变量<br>"
+    },
+    {
+        "predicate": "功能关系",
+        "value": "<br>除重力或弹簧弹力以外的其他力对物体所做的功等于物体机械能的增量<br>"
+    },
+    {
+        "predicate": "计算公式",
+        "value": "<br>$E={E_k}+{E_p}$<br>"
+    },
+    {
         "predicate": "包含",
-        "score": 0,
-        "answerflag": false,
-        "attention": "",
-        "fsscore": "",
-        "value": "机械能"
+        "value": "<br>动能<br><br>势能<br>"
+    },
+    {
+        "predicate": "性质",
+        "value": "<br>状态量：与某一位置或某一状态相对应\n  \n  \n    标矢性：标量，但有正负\n  \n  \n    相对性：与势能零点位置的选择有关\n  \n  \n    系统性：势能是系统共有的，机械能也是系统共有的<br>"
+    },
+    {
+        "predicate": "类别",
+        "value": "<br>动能<br><br>势能<br>"
     }
 ]
 ```

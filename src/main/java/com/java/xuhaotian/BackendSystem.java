@@ -472,8 +472,51 @@ public class BackendSystem {
 		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
 		if (jsonArray == null) jsonArray = new JSONArray();
 		
+		System.out.println("Dealing data...");
+		
+		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
+		JSONArray newJSONArray = new JSONArray();
+		Map<String, Set<String>> subjectMap = new HashMap<>();
+		Map<String, Set<String>> valueMap = new HashMap<>();
+		for (JSONObject obj: originalList) {
+			String subject = obj.getString("subject");
+			String predicate = obj.getString("predicate");
+			String value = obj.getString("value");
+			if (subject == null || predicate == null || value == null) continue;
+			if (subject.equals(subjectName) && !value.startsWith("http")) {
+				if (!valueMap.containsKey(predicate)) {
+					valueMap.put(predicate, new HashSet<String>());
+				}
+				valueMap.get(predicate).add(value);
+			}
+			else if (value.equals("<br>" + subjectName + "<br>") && !subject.startsWith("http")) {
+				if (!subjectMap.containsKey(predicate)) {
+					subjectMap.put(predicate, new HashSet<String>());
+				}
+				subjectMap.get(predicate).add("<br>" + subject + "<br>");
+			}
+		}
+		
+		subjectMap.forEach((predicate, subjectSet) -> {
+			StringBuffer stringBuffer = new StringBuffer();
+			subjectSet.forEach(str -> stringBuffer.append(str));
+			JSONObject newObj = new JSONObject();
+			newObj.put("predicate", predicate);
+			newObj.put("subject", stringBuffer.toString());
+			newJSONArray.add(newObj);
+		});
+		
+		valueMap.forEach((predicate, valueSet) -> {
+			StringBuffer stringBuffer = new StringBuffer();
+			valueSet.forEach(str -> stringBuffer.append(str));
+			JSONObject newObj = new JSONObject();
+			newObj.put("predicate", predicate);
+			newObj.put("value", stringBuffer.toString());
+			newJSONArray.add(newObj);
+		});
+		
 		System.out.println("Getting Related Subject successful!");
-		return jsonArray;
+		return newJSONArray;
 	}
 	
 }
