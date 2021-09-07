@@ -1,5 +1,5 @@
 # 版本
-1.5.5
+1.6.1
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -110,6 +110,10 @@ Get
 详细信息:JSONObject
 ```json
 {
+    "image": [
+        "http://kb.cs.tsinghua.edu.cn/apihtml/getpng/495/CS090002T00220010902",
+        "http://kb.cs.tsinghua.edu.cn/apihtml/getjpg/495/Figure-0000-311"
+    ],
     "property": [
         {
             "predicateLabel": "人口特征",

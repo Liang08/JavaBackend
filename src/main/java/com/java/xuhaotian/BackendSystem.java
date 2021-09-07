@@ -139,7 +139,7 @@ public class BackendSystem {
 		Set<String> hash = new HashSet<String>();
 		ArrayList<JSONObject> list = new ArrayList<>();
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/" + course + "#.+";
+		final String pattern = "http://eduk[bg].org/knowledge/0.1/instance/" + course + "#.+";
 		for (JSONObject obj : originalList) {
 			if (Pattern.matches(pattern, obj.getString("uri")) && (label.equals("") || label.equals(obj.getString("category")))) {
 				String name = obj.getString("label");
@@ -232,6 +232,18 @@ public class BackendSystem {
 		});
 		
 		jsonObject.put("property", property);
+		
+		JSONArray image = new JSONArray();
+		Set<String> imageSet = new HashSet<>();
+		for (JSONObject obj : originalProperty) {
+			String object = obj.getString("object");
+			if (obj.getString("predicate").equals("http://edukg.org/knowledge/0.1/property/common#image")) {
+				imageSet.add(object);
+			}
+		}
+		imageSet.forEach(str -> image.add(str));
+		
+		jsonObject.put("image", image);
 		
 		final String pattern = "http://edukg.org/knowledge/0.1/instance/([^#]+)#.+";
 		final Pattern r = Pattern.compile(pattern);
@@ -353,7 +365,7 @@ public class BackendSystem {
 		List<JSONObject> originalList = jsonArray.toJavaList(JSONObject.class);
 		ArrayList<JSONObject> list = new ArrayList<>();
 		
-		final String pattern = "http://edukb.org/knowledge/0.1/instance/([^#]+)#.+";
+		final String pattern = "http://eduk[bg].org/knowledge/0.1/instance/([^#]+)#.+";
 		final Pattern r = Pattern.compile(pattern);
 		
 		for (JSONObject obj : originalList) {
