@@ -322,6 +322,13 @@ public class BackendSystem {
 			return new Error(-1, "Server Error.");
 		}
 		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
+		if (jsonArray == null) jsonArray = new JSONArray();
+		if (jsonArray.isEmpty()) {
+			JSONObject obj = new JSONObject();
+			obj.put("value", "");
+			obj.put("message", "此问题没有找到答案！");
+			jsonArray.add(obj);
+		}
 		
 		System.out.println("Dealing data...");
 		
