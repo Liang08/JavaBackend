@@ -321,9 +321,23 @@ public class BackendSystem {
 			System.out.println("ERR: inputQuestion in BackendSystem\n" + response);
 			return new Error(-1, "Server Error.");
 		}
-		JSONObject jsonObject = JSONObject.parseObject(response.getBody());
+		JSONArray jsonArray = JSONObject.parseObject(response.getBody()).getJSONArray("data");
+		
+		System.out.println("Dealing data...");
+		
+		String[] message = {"这个问题太难了……", "这个问题我也不会欸~", "这可难倒我了。", "答案是什么呢——我也不知道呀^v^", "不会欸~看来我还要学习更多知识！"};
+		
+		JSONArray newArray = new JSONArray();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = jsonArray.getJSONObject(i);
+			if (obj.getString("value").isEmpty()) {
+				obj.put("message", message[(int)(Math.random() * message.length)]);
+			}
+			newArray.add(obj);
+		}
+		
 		System.out.println("Inputing Question successful!");
-		return jsonObject.get("data");
+		return newArray;
 	}
 	
 	/**
