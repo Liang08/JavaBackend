@@ -1,5 +1,5 @@
 # 版本
-1.6.4
+1.6.6
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -183,7 +183,7 @@ Post
 ### 参数
 | 名称 | 类型 | 位置 | 描述 |
 | ---- | ---- | ---- | ---- |
-| course | String | RequestBody | 学科，可选 |
+| course | String | RequestBody | 学科 |
 | inputQuestion | String | RequestBody | 问题，非空 |
 | token | String | RequestBody | token |
 ### 返回值
@@ -262,7 +262,7 @@ Post
 | 名称 | 类型 | 位置 | 描述 |
 | ---- | ---- | ---- | ---- |
 | context | String | RequestBody | 待识别文本，非空 |
-| course | String | RequestBody | 学科，可选 |
+| course | String | RequestBody | 学科 |
 | token | String | RequestBody | token |
 ### 返回值
 知识标注:List

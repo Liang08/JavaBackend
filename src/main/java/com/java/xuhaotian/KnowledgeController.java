@@ -74,7 +74,7 @@ public class KnowledgeController {
 	
 	/**
 	 * 问答
-	 * @param param包括course,inputQuestion和token，都是String，course可选
+	 * @param param包括course,inputQuestion和token，都是String
 	 * @return 如果失败返回错误信息，成功（200）返回回答（JSONArray类型）
 	 */
 	@PostMapping(value = "/inputQuestion")
@@ -95,7 +95,7 @@ public class KnowledgeController {
 	
 	/**
 	 * 知识识别
-	 * @param param包括context,course和token，都是String，course可选
+	 * @param param包括context,course和token，都是String
 	 * @return 如果失败返回错误信息，成功（200）返回知识标注（List类型）
 	 */
 	@PostMapping(value = "/linkInstance")

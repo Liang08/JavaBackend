@@ -294,7 +294,7 @@ public class BackendSystem {
 	
 	/**
 	 * 问答接口
-	 * @param course学科（可选）
+	 * @param course学科
 	 * @param inputQuestion问题
 	 * @return JSON格式的回答
 	 */
@@ -350,7 +350,7 @@ public class BackendSystem {
 	/**
 	 * 知识链接接口
 	 * @param context待识别文本
-	 * @param course学科（可选）
+	 * @param course学科
 	 * @return JSON格式的标注
 	 */
 	public static Object linkInstance(String context, String course) {
