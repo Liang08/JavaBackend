@@ -315,7 +315,7 @@ public class KnowledgeController {
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
 		if (course == null || course.isEmpty() || searchKey == null || searchKey.isEmpty()) {
-			return new ResponseEntity<Error>(new Error(16, "Course and searchKey cannot be empty!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Error>(new Error(18, "Course and searchKey cannot be empty!"), HttpStatus.BAD_REQUEST);
 		}
 		user.addSearchHistory(ImmutablePair.of(course, searchKey));
 		return new ResponseEntity<>(null, HttpStatus.OK);

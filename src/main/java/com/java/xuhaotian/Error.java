@@ -18,8 +18,9 @@ package com.java.xuhaotian;
  * 13:offset or limit negative when getQuestionListByUriName
  * 14:password empty when modifying password
  * 15:invalid query when getInfoByInstanceName
- * 16:name or course empty when set/reset favourite or setInstanceHistory
+ * 16:name or course empty when set/reset favourite or addInstanceHistory
  * 17 course or subjectName empty when getRelatedSubject
+ * 18:course or searchKey empty when addSearchHistory
  * @author xht13127
  * 
  */

@@ -1,5 +1,5 @@
 # 版本
-1.7.1
+1.7.2
 
 # 运行
 命令行输入mvnw spring-boot:run
