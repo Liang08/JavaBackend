@@ -194,7 +194,7 @@ public class KnowledgeController {
 		String token = param.getString("token");
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		if (course == null || course .isEmpty() || name == null || name.isEmpty()) {
+		if (course == null || course.isEmpty() || name == null || name.isEmpty()) {
 			return new ResponseEntity<Error>(new Error(16, "Course and Name cannot be empty!"), HttpStatus.BAD_REQUEST);
 		}
 		user.addInstanceHistory(ImmutablePair.of(course, name));
@@ -240,7 +240,7 @@ public class KnowledgeController {
 		String token = param.getString("token");
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		if (course == null || course .isEmpty() || name == null || name.isEmpty()) {
+		if (course == null || course.isEmpty() || name == null || name.isEmpty()) {
 			return new ResponseEntity<Error>(new Error(16, "Course and Name cannot be empty!"), HttpStatus.BAD_REQUEST);
 		}
 		user.setFavourite(ImmutablePair.of(course, name));
@@ -259,7 +259,7 @@ public class KnowledgeController {
 		String token = param.getString("token");
 		User user = UserSystem.getUserByToken(token);
 		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
-		if (course == null || course .isEmpty() || name == null || name.isEmpty()) {
+		if (course == null || course.isEmpty() || name == null || name.isEmpty()) {
 			return new ResponseEntity<Error>(new Error(16, "Course and Name cannot be empty!"), HttpStatus.BAD_REQUEST);
 		}
 		user.resetFavourite(ImmutablePair.of(course, name));
@@ -300,6 +300,25 @@ public class KnowledgeController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(history, HttpStatus.OK);
+	}
+	
+	/**
+	 * 上传搜索历史记录
+	 * @param param包括course,searchKey和token，都是String
+	 * @return 成功（200）返回null
+	 */
+	@PostMapping(value = "/addSearchHistory")
+	public ResponseEntity<?> addSearchHistory(@RequestBody JSONObject param) {
+		String course = param.getString("course");
+		String searchKey = param.getString("searchKey");
+		String token = param.getString("token");
+		User user = UserSystem.getUserByToken(token);
+		if (user == null) return new ResponseEntity<Error>(new Error(9, "Require logged in."), HttpStatus.UNAUTHORIZED);
+		if (course == null || course.isEmpty() || searchKey == null || searchKey.isEmpty()) {
+			return new ResponseEntity<Error>(new Error(16, "Course and searchKey cannot be empty!"), HttpStatus.BAD_REQUEST);
+		}
+		user.addSearchHistory(ImmutablePair.of(course, searchKey));
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 # 版本
-1.6.6
+1.7.1
 
 # 运行
 命令行输入mvnw spring-boot:run
@@ -541,6 +541,20 @@ Get
     }
 ]
 ```
+
+
+### 上传搜索历史记录接口
+/addSearchHistory
+### 方法类型
+Post
+### 参数
+| 名称 | 类型 | 位置 | 描述 |
+| ---- | ---- | ---- | ---- |
+| course | String | RequestBody | 学科 |
+| searchKey | String | RequestBody | 关键字 |
+| token | String | RequestBody | token |
+### 返回值
+null
 
 
 ### 清除搜索历史记录接口
